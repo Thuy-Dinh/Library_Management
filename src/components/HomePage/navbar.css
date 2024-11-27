@@ -1,0 +1,140 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+    position: fixed; 
+    top: 0; 
+    width: 100%; 
+    height: 75px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: white;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-logo {
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image-logo {
+    width: 70px;
+    height: 25px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.image-logo:hover {
+    transform: scale(1.3);
+    cursor: pointer;
+}
+
+.logo-text {
+    font-style: italic;
+    font-size: 20px;
+}
+
+.navbar-content {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 70px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.navbar-content > a {
+    color: black;
+    text-decoration-line: none;
+}
+
+.navbar-content > li:hover {
+    color: #499e46;
+    cursor: pointer;
+}
+
+.navbar-content > a:hover {
+    color: #499e46;
+    cursor: pointer;
+}
+
+.navbar-btn {
+    display: flex;
+    gap: 50px;
+}
+
+.navbar-btn > button {
+    background-color: white;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.navbar-btn > a {
+    color: black;
+    text-decoration-line: none;
+    font-size: 18px;
+}
+.navbar-btn > button:hover, 
+.navbar-btn > a:hover {
+    color: #2c2b2ba3;
+}
+
+.navbar-user {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+}
+
+.user-img {
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: aquamarine;
+    color: white;
+    padding: 6px 14px;
+    font-size: 20px;
+}
+
+.user-name {
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.navbar-navigator{
+    position: absolute;
+    top: 70px;
+    right: 10px;
+    background-color: white;
+    box-shadow: 3px 3px 5px 0 gray;
+    border-radius: 5px;
+}
+
+.navbar-item {
+    padding: 10px 30px 10px 15px;
+    border-bottom: 1px solid gray;
+    cursor: pointer;
+    text-align: left;
+}
+
+.navbar-item:last-child {
+    border: none;
+}
+
+.navbar-item:hover {
+    background-color: rgb(220, 223, 223);
+}
+
+.navbar-item > a {
+    color: black;
+    text-decoration-line: none;
+}

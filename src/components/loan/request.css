@@ -1,0 +1,30 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.request-body {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ccccccb2;
+}
+
+.request-content {
+    border: 1px solid #fff;
+    background-color: #fff;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    color: #db200b;
+    font-size: 22px;
+    font-weight: 700;
+    display:flex;
+    flex-direction: column;
+    gap: 5px;
+}
