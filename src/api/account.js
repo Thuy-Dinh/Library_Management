@@ -1,5 +1,20 @@
 import axios from 'axios';
 
+async function ComfirmApi() {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await axios.post("http://localhost:3050/comfirm", {
+            token: token
+        });
+
+        return response.data;
+    } catch (error) {
+        // Xử lý lỗi
+        console.error('Error during login:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+}
+
 async function SignupApi(name, email, password) {
     try {
         const response = await axios.post('http://localhost:3050/signup', {
@@ -58,6 +73,7 @@ async function GetAUserApi(id) {
 export { 
     SignupApi,
     LoginApi,
+    ComfirmApi,
     GetAllUserApi,
     GetAUserApi
 };  

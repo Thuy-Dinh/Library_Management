@@ -31,7 +31,11 @@ export default function Signup({ setIsAuthenticated }) {
             if (data && data.errCode !== 0) {
                 setErrMessage(data.message);
             } else {
-                navigate('/login');
+                setErrMessage(data.message);
+                localStorage.setItem("token", data.token);
+                setTimeout(() => {
+                    navigate('/login');
+                }, 5000);
             }
         } catch (error) {
             if (error.response && error.response.data) {

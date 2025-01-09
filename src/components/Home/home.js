@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from "../Auth/login";
 import Signup from "../Auth/signup";
+import Confirm from "../Auth/comfirm";
 import HomePage from "../HomePage/homePage";
 import BookDetail from "../BookDetail/bookDetail";
 import LoanForm from "../loan/loanForm";
@@ -52,6 +53,10 @@ export default function Home() {
                     <Route
                         path="/signup"
                         element={<Signup setIsAuthenticated={handleAuthentication} />}
+                    />
+                    <Route
+                        path="/confirm"
+                        element={<Confirm/>}
                     />
                     <Route path="/detail-book" element={<BookDetail />} />
                     <Route
