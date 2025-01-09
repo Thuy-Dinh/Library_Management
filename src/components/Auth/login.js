@@ -48,7 +48,7 @@ export default function Login({ setIsAuthenticated }) {
                     navigate('/');
                 }
                 else if(response.account.Role === 'admin')
-                    navigate('/admin');             
+                    navigate('/admin/overview');             
                 setErrMessage('');
             } else {
                 setErrMessage(response.message || 'Đăng nhập không thành công.');
@@ -69,12 +69,16 @@ export default function Login({ setIsAuthenticated }) {
         setShowPassword(!showPassword);
     };
 
+    const handleLoginRedirect = () => {
+        navigate('/signup');
+    };
+
     return (
         <div className='login-background'>
             <div className='login-container-left'>
                 <div className='text-center text-welcome'>Chào mừng trở lại!</div>
-                <p className='text-center'>Bạn chưa có tài khoản? Hãy đăng kí.</p>
-                <button className='signup-btn'>Đăng kí</button>
+                <p className='text-center'>Bạn chưa có tài khoản? Hãy đăng ký.</p>
+                <button className='signup-btn' onClick={handleLoginRedirect}>Đăng ký</button>
             </div>
             <div className='login-container-right'>
                 <div className='col-12 text-title'>Đăng nhập</div>

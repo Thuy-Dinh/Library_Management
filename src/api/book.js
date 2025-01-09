@@ -61,10 +61,62 @@ async function GetAllBookApi() {
     }
 }
 
+async function createBookApi(title, author, topic, subcategory, tag, publisher, publication_year, edition, summary, language, cover) {
+    try {
+        console.log(title, author, topic, subcategory, tag, publisher, publication_year, edition, summary, language, cover);
+        const response = await axios.post('http://localhost:3050/book/create-book', {
+            title, 
+            author, 
+            topic, 
+            subcategory, 
+            tag, 
+            publisher, 
+            publication_year, 
+            edition, 
+            summary, 
+            language, 
+            cover
+        });
+
+        return response.data; // Trả về dữ liệu phản hồi từ API
+    } catch (error) {
+        console.error('Error during creating book:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+}
+
+async function GetAllTopicApi() {
+    try {
+        const response = await axios.get('http://localhost:3050/book/all-topic');
+
+        return response.data;
+    } catch (error) {
+        // Xử lý lỗi
+        console.error('Error during login:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+}
+
+async function createTopicApi(topic) {
+    try {
+        const response = await axios.post('http://localhost:3050/book/create-topic', {
+            topic
+        });
+
+        return response.data; // Trả về dữ liệu phản hồi từ API
+    } catch (error) {
+        console.error('Error during creating book:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+}
+
 export { 
     FavoriteApi, 
     LastestBookApi, 
     BookDetailApi, 
     BookProposesApi,
-    GetAllBookApi
+    GetAllBookApi,
+    createBookApi,
+    GetAllTopicApi,
+    createTopicApi
 };  

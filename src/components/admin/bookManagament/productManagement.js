@@ -80,7 +80,7 @@ export default function ProductManagement() {
                                 onChange={handleChange}
                             />
                         </div>
-                        <Link to="/admin/product-management/product-create" className="btn-add">
+                        <Link to="/admin/product-management/create" className="btn-add">
                             <FontAwesomeIcon icon={faCirclePlus} />
                             <span>Thêm sách</span>
                         </Link>
@@ -94,7 +94,7 @@ export default function ProductManagement() {
                             <th>Title</th>
                             <th>Author</th>
                             <th>Topic</th>
-                            <th>Subcaterory</th>
+                            <th>Subcategory</th>
                             <th>Edition</th>
                             <th>Availability</th>
                             <th>Mượn (lần)</th>
@@ -107,8 +107,8 @@ export default function ProductManagement() {
                                 <td>{item.BookID}</td>
                                 <td>{item.Title}</td>
                                 <td>{item.Author}</td>
-                                <td>{item.Topic}</td>
-                                <td>{item.Subcaterory}</td>
+                                <td>{item.Category.Name}</td>
+                                <td>{item.Subcategory}</td>
                                 <td>{item.Edition}</td>
                                 <td>{item.Availability}</td>
                                 <td>{item.CountBorrow}</td>

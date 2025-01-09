@@ -1,0 +1,4 @@
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed; /* Thêm con trỏ "không được phép" */
+}

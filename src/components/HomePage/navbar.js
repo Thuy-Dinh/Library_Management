@@ -68,7 +68,7 @@ function Navbar({ isAuthenticated, userName, setIsAuthenticated }) {
                 ) : (
                     <div className="navbar-btn">
                         <Link to="/login">Đăng nhập</Link>
-                        <button>Đăng ký</button>
+                        <Link to="/signup">Đăng ký</Link>
                     </div>
                 )}
             </div>

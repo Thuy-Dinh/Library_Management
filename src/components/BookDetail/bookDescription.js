@@ -67,7 +67,7 @@ function BookDescription({ isAuthenticated }) {
                     <div>Tác giả: {bookDetail.Author}</div>
                     <div>Nhà xuất bản: {bookDetail.Publisher}</div>
                     <div>Năm xuất bản: {bookDetail.Publication_year}</div>
-                    <div>Tái bản lần thứ {bookDetail.Edition}</div>
+                    <div>Tái bản lần thứ {bookDetail.Edition = "First" ? "nhất" : "hai"}</div>
                     <div>Ngôn ngữ: {bookDetail.Language}</div>
                     <div>
                         {bookDetail.Rating}

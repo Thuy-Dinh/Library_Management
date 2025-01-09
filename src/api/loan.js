@@ -52,7 +52,24 @@ async function getAllLoanApi(email) {
     }
 }
 
+async function acceptLoanApi(loanID, state) {
+    try {
+        const response = await axios.post("http://localhost:3050/loan/accept-loan", {
+            loanID, 
+            state
+        });
+        return response.data; 
+    } catch (error) {
+        console.error(
+            'Error fetching loan data:',
+            error.response ? error.response.data : error.message
+        );
+        throw error; // Ném lỗi để xử lý ở nơi gọi hàm
+    }
+}
+
 export { 
     CreateLoanApi, 
-    getAllLoanApi 
+    getAllLoanApi,
+    acceptLoanApi 
 };  

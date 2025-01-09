@@ -80,7 +80,6 @@ export default function UserManagement() {
                         onChange={handleChange}
                     />
                 </div>
-                <Link to="/admin/user-management/user-create" className="btn-add">Thêm tài khoản</Link>
             </div>
 
             <table className="user-table">
@@ -111,9 +110,9 @@ export default function UserManagement() {
                                     <button className="btn-edit" onClick={() => handleEdit(item)}>
                                         <FontAwesomeIcon icon={faPenToSquare} />
                                     </button>
-                                    <button className="btn-delete">
+                                    {/* <button className="btn-delete">
                                         <FontAwesomeIcon icon={faTrash} />
-                                    </button>
+                                    </button> */}
                                 </div>
                             </td>
                         </tr>

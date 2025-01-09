@@ -225,6 +225,7 @@ function LoanForm() {
                             value={formData.countDay}
                             onChange={handleChange}
                             max="30"
+                            min="1"
                         />
                         {errors.countDay && <div className="error">{errors.countDay}</div>}
                     </label>
