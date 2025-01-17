@@ -8,7 +8,7 @@ import { GetAllBookApi } from "../../../api/book";
 export default function ProductManagement() {
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const recordsPerPage = 4;
+    const recordsPerPage = 6;
     const navigate = useNavigate();
 
     useEffect(() => {

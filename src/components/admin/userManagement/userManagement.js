@@ -8,7 +8,7 @@ import "./userManagement.css";
 export default function UserManagement() {
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const recordsPerPage = 5;
+    const recordsPerPage = 8;
     const [searchInput, setSearchInput] = useState("");
     const navigate = useNavigate();
 

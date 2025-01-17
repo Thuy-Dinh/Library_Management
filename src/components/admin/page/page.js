@@ -39,7 +39,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
                         <FontAwesomeIcon icon={faBook} /> Quản lý sách
                     </div>
                     <div onClick={() => handleSectionChange('/admin/order-management')} className='sidebar-item'>
-                        <FontAwesomeIcon icon={faFile} /> Quản lý đơn hàng
+                        <FontAwesomeIcon icon={faFile} /> Quản lý đơn mượn
                     </div>
                     <div onClick={handleLogout} className='sidebar-item'>
                         <FontAwesomeIcon icon={faRightFromBracket} /> Đăng xuất
