@@ -12,6 +12,7 @@ import Dashboard from "../admin/page/page";
 import Overview from "../admin/overview/overview";
 import UserManagement from "../admin/userManagement/userManagement";
 import ProductManagement from "../admin/bookManagament/productManagement";
+import ProductEdit from "../admin/bookManagament/productEdit";
 import LoanManagement from "../admin/sell/loanManagement";
 import ProductCreate from "../admin/bookManagament/productCreate";
 import SearchByCategory from "../searchByCategory/mainPage";
@@ -108,6 +109,7 @@ export default function Home() {
                         <Route path="product-management" element={<ProductManagement />} />
                         <Route path="order-management" element={<LoanManagement />} />
                         <Route path="product-management/create" element={<ProductCreate />} />
+                        <Route path="product-management/edit" element={<ProductEdit />} />
                     </Route>
                     <Route
                         path="/search"

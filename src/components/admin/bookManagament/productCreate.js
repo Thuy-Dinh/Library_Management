@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./productCreate.css";
 import { useNavigate } from "react-router-dom";
-import { createBookApi, GetAllTopicApi, createTopicApi } from "../../../api/book";
+import { CreateBookApi, GetAllTopicApi, CreateTopicApi } from "../../../api/book";
 
 const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -95,19 +95,18 @@ export default function ProductCreate() {
     
                 if (topicExists) {
                     alert("Chủ đề này đã tồn tại. Vui lòng chọn trong danh sách chủ đề.");
-                    return; // Dừng việc tạo sách
+                    return;
                 }
     
-                // Nếu chủ đề mới không trùng với chủ đề cũ, gọi API tạo chủ đề mới
-                const newTopicResponse = await createTopicApi({ topic: newTopic });
-                topicToSubmit = newTopicResponse.data; // Lấy ID của chủ đề mới
+                const newTopicResponse = await CreateTopicApi({ topic: newTopic });
+                topicToSubmit = newTopicResponse.data.Name; 
             }
     
             // Gọi API tạo sách với chủ đề đã chọn
-            const response = await createBookApi(
+            const response = await CreateBookApi(
                 formData.title,
                 formData.author,
-                topicToSubmit.Name, // Lưu ý truyền đúng dữ liệu cho chủ đề
+                topicToSubmit, 
                 formData.subcategory,
                 formData.tag,
                 formData.publisher,

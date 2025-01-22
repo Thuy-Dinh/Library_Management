@@ -7,15 +7,15 @@ import { totalBookApi, availableBookApi, topBorrowedBookApi, countBorrowedBookAp
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
 const Overview = () => {
-  const data = {
-    labels: ['Completed', 'Pending', 'Shipped', 'Returned'],
-    datasets: [
-      {
-        data: [40, 20, 30, 10],
-        backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0'],
-      },
-    ],
-  };
+  // const data = {
+  //   labels: ['Completed', 'Pending', 'Shipped', 'Returned'],
+  //   datasets: [
+  //     {
+  //       data: [40, 20, 30, 10],
+  //       backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0'],
+  //     },
+  //   ],
+  // };
 
   const [totalBook, setTotalBook] = useState("");
   const [availableBook, setAvailableBook] = useState("");
@@ -145,10 +145,10 @@ const Overview = () => {
             </tbody>
           </table>
         </div>
-        <div className="chart-container">
+        {/* <div className="chart-container">
           <h3>Trạng thái đơn hàng</h3>
           <Pie data={data} />
-        </div>
+        </div> */}
       </div>
     </div>
   );

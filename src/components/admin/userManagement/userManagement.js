@@ -96,8 +96,8 @@ export default function UserManagement() {
                     </tr>
                 </thead>
                 <tbody>
-                    {currentRecords.map((item) => (
-                        <tr key={item.id}>
+                    {currentRecords.map((item, index) => (
+                        <tr key={item.AccountID || index}>
                             <td>{item.AccountID}</td>
                             <td>{item.Email}</td>
                             <td>{item.Name}</td>

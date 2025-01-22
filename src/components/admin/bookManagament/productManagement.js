@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faCirclePlus, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from "react-router-dom";
 import './productManagement.css';
-import { GetAllBookApi } from "../../../api/book";
+import { GetAllBookApi, DeleteBookApi } from "../../../api/book";
 
 export default function ProductManagement() {
     const [data, setData] = useState([]);
@@ -62,8 +62,25 @@ export default function ProductManagement() {
     };
 
     const handleEdit = (product) => {
-        navigate("/admin/product-management/product-edit", { state: { product } });
+        navigate("/admin/product-management/edit", { state: { product } });
     };
+
+    const handleDel = async (bookID) => {
+        try {
+            await DeleteBookApi(bookID);
+            console.log("delete succeedfull");
+    
+            // Làm mới dữ liệu sau khi xóa
+            const books = await GetAllBookApi();
+            if (books && Array.isArray(books.data)) {
+                setData(books.data);
+            } else {
+                console.error("Dữ liệu không hợp lệ:", books);
+            }
+        } catch (error) {
+            console.error("Lỗi khi xóa sách:", error);
+        }
+    }    
 
     return (
         <div className="product-container">
@@ -117,7 +134,7 @@ export default function ProductManagement() {
                                         <button className="btn-edit" onClick={() => handleEdit(item)}>
                                             <FontAwesomeIcon icon={faPenToSquare} />
                                         </button>
-                                        <button className="btn-delete">
+                                        <button className="btn-delete" onClick={() => handleDel(item._id)}>
                                             <FontAwesomeIcon icon={faTrash} />
                                         </button>
                                     </div>

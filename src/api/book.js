@@ -61,7 +61,7 @@ async function GetAllBookApi() {
     }
 }
 
-async function createBookApi(title, author, topic, subcategory, tag, publisher, publication_year, edition, summary, language, cover) {
+async function CreateBookApi(title, author, topic, subcategory, tag, publisher, publication_year, edition, summary, language, cover) {
     try {
         console.log(title, author, topic, subcategory, tag, publisher, publication_year, edition, summary, language, cover);
         const response = await axios.post('http://localhost:3050/book/create-book', {
@@ -85,6 +85,36 @@ async function createBookApi(title, author, topic, subcategory, tag, publisher, 
     }
 }
 
+async function UpdateBookApi(id, formData) {
+    try {
+        const response = await axios.post(
+            `http://localhost:3050/book/update-book/${id}`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );        
+
+        return response.data;
+    } catch (error) {
+        console.error("Error during updating book:", error.response ? error.response.data : error.message);
+        throw error;
+    }
+}
+
+async function DeleteBookApi(bookID) {
+    try {
+        const response = await axios.get(`http://localhost:3050/book/delete-book/${bookID}`);
+
+        return response.data;  
+    } catch (error) {
+        console.error('Error during delete book:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+}
+
 async function GetAllTopicApi() {
     try {
         const response = await axios.get('http://localhost:3050/book/all-topic');
@@ -97,7 +127,7 @@ async function GetAllTopicApi() {
     }
 }
 
-async function createTopicApi(topic) {
+async function CreateTopicApi(topic) {
     try {
         const response = await axios.post('http://localhost:3050/book/create-topic', {
             topic
@@ -116,7 +146,9 @@ export {
     BookDetailApi, 
     BookProposesApi,
     GetAllBookApi,
-    createBookApi,
+    CreateBookApi,
+    UpdateBookApi,
+    DeleteBookApi,
     GetAllTopicApi,
-    createTopicApi
+    CreateTopicApi
 };  

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import './productEdit.css';
+import { UpdateBookApi } from "../../../api/book";
 
 export default function ProductEdit() {
     const location = useLocation();
@@ -8,17 +9,20 @@ export default function ProductEdit() {
     const existingProduct = location.state?.product || {};
     
     const [formData, setFormData] = useState({
-        name: existingProduct.name || '',
-        price: existingProduct.price || '',
-        quantity: existingProduct.quantity || '',
-        specialPrice: existingProduct.specialPrice || '',
-        discount: existingProduct.discount || '',
-        description: existingProduct.description || '',
-        image: null
+        title: existingProduct.Title || "",
+        author: existingProduct.Author || "",
+        topic: existingProduct.Category.Name || "",
+        subcategory: existingProduct.Subcategory || "",
+        tag: existingProduct.Tag || "",
+        publisher: existingProduct.Publisher || "",
+        publication_year: existingProduct.Publication_year || "",
+        edition: existingProduct.Edition || "",
+        summary: existingProduct.Summary || "",
+        language: existingProduct.Language || "",
+        cover: existingProduct.Cover,
     });
 
-    const [preview, setPreview] = useState(null);
-    const [submitted, setSubmitted] = useState(false);
+    const [preview, setPreview] = useState(existingProduct.Cover);
 
     useEffect(() => {
         return () => {
@@ -30,77 +34,159 @@ export default function ProductEdit() {
         const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: value
+            [name]: value,
         });
     };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setFormData({
-                ...formData,
-                image: file
-            });
-            if (preview) URL.revokeObjectURL(preview);
-            setPreview(URL.createObjectURL(file));
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData({
+                    ...formData,
+                    cover: reader.result, // Lưu base64 vào state
+                });
+                setPreview(reader.result); // Hiển thị ảnh preview
+            };
+            reader.readAsDataURL(file); // Chuyển file sang base64
         }
-    };
+    };    
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const productData = new FormData();
-        productData.append("name", formData.name);
-        productData.append("price", formData.price);
-        productData.append("quantity", formData.quantity);
-        productData.append("specialPrice", formData.specialPrice);
-        productData.append("discount", formData.discount);
-        productData.append("description", formData.description);
-        if (formData.image) productData.append("image", formData.image);
-
-        console.log("Product data submitted:", formData);
-
-        setSubmitted(true);
-
-        // setTimeout(() => navigate("/product-management"), 2000);
-    };
+    
+        try {
+            const response = await UpdateBookApi(existingProduct._id, formData); // Gửi formData trực tiếp dưới dạng JSON
+            console.log("Cập nhật sách thành công:", response);
+            alert("Thông tin sách đã được cập nhật!");
+            navigate("/admin/product-management");
+        } catch (error) {
+            console.error("Lỗi khi cập nhật sách:", error);
+            alert("Có lỗi xảy ra!");
+        }
+    };     
 
     return (
         <div className="product-container">
             <div className="product-body">
-                <h1>Danh sách sản phẩm/Chỉnh sửa thông tin sản phẩm</h1>
+                <h1>Chỉnh sửa thông tin sách</h1>
                 <form className="product-edit" onSubmit={handleSubmit}>
-                    <label htmlFor="name">
-                        <span>Tên</span>
-                        <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
+                    <label htmlFor="title">
+                        <span>Tiêu đề</span>
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            value={formData.title}
+                            onChange={handleChange}
+                            required
+                        />
                     </label>
-                    <label htmlFor="price">
-                        <span>Giá</span>
-                        <input type="number" id="price" name="price" value={formData.price} onChange={handleChange} min="0" required />
+                    <label htmlFor="author">
+                        <span>Tác giả</span>
+                        <input
+                            type="text"
+                            id="author"
+                            name="author"
+                            value={formData.author}
+                            onChange={handleChange}
+                            required
+                        />
                     </label>
-                    <label htmlFor="quantity">
-                        <span>Số lượng</span>
-                        <input type="number" id="quantity" name="quantity" value={formData.quantity} onChange={handleChange} min="0" required />
+                    <label htmlFor="topic">
+                        <span>Chủ đề</span>
+                        <input
+                            type="text"
+                            id="topic"
+                            name="topic"
+                            value={formData.topic}
+                            onChange={handleChange}
+                            readOnly
+                        />
                     </label>
-                    <label htmlFor="specialPrice">
-                        <span>Giá ưu đãi</span>
-                        <input type="number" id="specialPrice" name="specialPrice" value={formData.specialPrice} onChange={handleChange} min="0"/>
+                    <label htmlFor="subcategory">
+                        <span>Phân loại phụ</span>
+                        <input
+                            type="text"
+                            id="subcategory"
+                            name="subcategory"
+                            value={formData.subcategory}
+                            onChange={handleChange}
+                        />
                     </label>
-                    <label htmlFor="discount">
-                        <span>Giảm giá (%)</span>
-                        <input type="number" id="discount" name="discount" value={formData.discount} onChange={handleChange} min="0"/>
+                    <label htmlFor="tag">
+                        <span>Thẻ</span>
+                        <input
+                            type="text"
+                            id="tag"
+                            name="tag"
+                            value={formData.tag}
+                            onChange={handleChange}
+                        />
                     </label>
-                    <label htmlFor="description">
-                        <span>Mô tả</span>
-                        <textarea id="description" name="description" value={formData.description} onChange={handleChange} />
+                    <label htmlFor="publisher">
+                        <span>Nhà xuất bản</span>
+                        <input
+                            type="text"
+                            id="publisher"
+                            name="publisher"
+                            value={formData.publisher}
+                            onChange={handleChange}
+                        />
                     </label>
-                    <label htmlFor="image">
-                        <span>Ảnh minh họa</span>
-                        <input type="file" id="image" name="image" onChange={handleImageChange} />
+                    <label htmlFor="publication_year">
+                        <span>Năm xuất bản</span>
+                        <input
+                            type="number"
+                            id="publication_year"
+                            name="publication_year"
+                            value={formData.publication_year}
+                            onChange={handleChange}
+                            min="0"
+                        />
+                    </label>
+                    <label htmlFor="edition">
+                        <span>Phiên bản</span>
+                        <input
+                            type="text"
+                            id="edition"
+                            name="edition"
+                            value={formData.edition}
+                            onChange={handleChange}
+                        />
+                    </label>
+                    <label htmlFor="summary">
+                        <span>Tóm tắt</span>
+                        <textarea
+                            id="summary"
+                            name="summary"
+                            value={formData.summary}
+                            onChange={handleChange}
+                        ></textarea>
+                    </label>
+                    <label htmlFor="language">
+                        <span>Ngôn ngữ</span>
+                        <input
+                            type="text"
+                            id="language"
+                            name="language"
+                            value={formData.language}
+                            onChange={handleChange}
+                        />
+                    </label>
+                    <label htmlFor="cover">
+                        <span>Ảnh bìa</span>
+                        <input
+                            type="file"
+                            id="cover"
+                            name="cover"
+                            onChange={handleImageChange}
+                        />
                     </label>
                     {preview && <img src={preview} alt="Preview" className="image-preview" />}
-                    <input type="submit" value="Chỉnh sửa" />
+                    <input type="submit" value="Cập nhật sách" />
                 </form>
-                {/* {submitted && <p className="submission-message">Thông tin sản phẩm đã được gửi thành công! Đang quay lại danh sách...</p>} */}
             </div>
         </div>
     );
