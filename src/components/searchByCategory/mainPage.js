@@ -1,91 +1,157 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";  // Để lấy tham số từ URL
+import { useLocation } from "react-router-dom"; 
 import Navbar from "../HomePage/navbar";
 import Header from "../HomePage/header";
 import Footer from "../HomePage/footer";
-import { GetAllTopicApi } from '../../api/book';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { Link, useNavigate } from "react-router-dom";
+import { GetAllTopicApi, SearchByCategoryApi } from "../../api/book";
+import "./mainPage.css";
 
 export default function SearchByCategory() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false); // Quản lý trạng thái đăng nhập
-    const [userName, setUserName] = useState('');
-    const [topics, setTopics] = useState([]); // Danh sách các chủ đề
-    const [selectedTopics, setSelectedTopics] = useState([]); // Chủ đề đã được chọn
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [topics, setTopics] = useState([]); 
+  const [books, setBooks] = useState([]); 
+  const [selectedTopics, setSelectedTopics] = useState([]); 
+  const navigate = useNavigate();
 
-    // Lấy tham số từ URL
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const selectedCategory = queryParams.get('category'); // Lấy giá trị của category từ URL
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const selectedCategory = queryParams.get("category"); 
 
-    useEffect(() => {
-        const storedName = localStorage.getItem('userName');
-        const storedToken = localStorage.getItem('userToken');
-        if (storedName && storedToken) {
-            setIsAuthenticated(true);
-            setUserName(storedName);
+  useEffect(() => {
+    const storedName = localStorage.getItem("userName");
+    const storedToken = localStorage.getItem("userToken");
+    if (storedName && storedToken) {
+      setIsAuthenticated(true);
+      setUserName(storedName);
+    } else {
+      setIsAuthenticated(false);
+    }
+
+    const fetchTopics = async () => {
+      try {
+        const response = await GetAllTopicApi(); 
+        if (response.success) {
+          setTopics(response.data); 
+          if (selectedCategory) {
+            setSelectedTopics([selectedCategory]);
+          }
         } else {
-            setIsAuthenticated(false);
+          console.error("Failed to fetch topics:", response.message);
         }
-
-        // Lấy danh sách các chủ đề
-        const fetchTopics = async () => {
-            try {
-                const response = await GetAllTopicApi(); // Lấy dữ liệu chủ đề từ API
-                if (response.success) {
-                    setTopics(response.data); // Lưu dữ liệu chủ đề
-                    // Kiểm tra nếu chủ đề đã chọn từ URL thì tích vào ô checkbox
-                    if (selectedCategory) {
-                        setSelectedTopics([selectedCategory]);
-                    }
-                } else {
-                    console.error("Failed to fetch topics:", response.message);
-                }
-            } catch (error) {
-                console.error("Error fetching topics:", error);
-            }
-        };
-        fetchTopics();
-    }, [selectedCategory]);  // Mỗi khi selectedCategory thay đổi, sẽ fetch lại dữ liệu
-
-    // Hàm để cập nhật các chủ đề đã chọn
-    const handleTopicChange = (e) => {
-        const topicId = e.target.value;
-        setSelectedTopics(prevState => 
-            prevState.includes(topicId) 
-            ? prevState.filter(id => id !== topicId) 
-            : [...prevState, topicId]
-        );
+      } catch (error) {
+        console.error("Error fetching topics:", error);
+      }
     };
 
-    return (
-        <div className="homepage-body">
-            <Navbar isAuthenticated={isAuthenticated} userName={userName} setIsAuthenticated={setIsAuthenticated} />
-            <Header />
-            
-            <div className="search-container">
-                {/* Sidebar bên trái */}
-                <div className="sidebar">
-                    <h3>Chọn chủ đề</h3>
-                    {topics.map((topic) => (
-                        <div key={topic._id} className="topic-checkbox">
-                            <input 
-                                type="checkbox" 
-                                value={topic._id} 
-                                checked={selectedTopics.includes(topic.topic)} // Kiểm tra nếu chủ đề này được chọn
-                                onChange={handleTopicChange} 
-                            />
-                            <label>{topic.topic}</label>
-                        </div>
-                    ))}
-                </div>
+    fetchTopics();
+  }, [selectedCategory]); 
 
-                {/* Nội dung chính */}
-                <div className="main-content">
-                    <h2>Danh sách sách theo chủ đề</h2>
-                    {/* Ở đây bạn có thể hiển thị các sách theo chủ đề đã chọn */}
-                </div>
-            </div>
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        if (selectedTopics.length > 0) {
+          const response = await SearchByCategoryApi(selectedTopics); // Gửi danh sách chủ đề
+          if (response.success && Array.isArray(response.data)) {
+            setBooks(response.data); 
+          } else {
+            console.error("Failed to fetch books:", response.message);
+            setBooks([]);
+          }
+        } else {
+          setBooks([]); // Nếu không có chủ đề nào được chọn, đặt về mảng rỗng
+        }
+      } catch (error) {
+        console.error("Error fetching books:", error);
+        setBooks([]);
+      }
+    };
+  
+    fetchBooks();
+  }, [selectedTopics]);   
 
-            <Footer />
-        </div>
+  const handleTopicChange = (e) => {
+    const topicName = e.target.value; 
+    setSelectedTopics((prevState) =>
+      prevState.includes(topicName)
+        ? prevState.filter((name) => name !== topicName)
+        : [...prevState, topicName]
     );
+  };
+
+  const handleAvailable = (book) => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    if (book.Availability.toLowerCase() === "available") {
+      navigate(`/form-loan?bookId=${encodeURIComponent(book._id)}`);
+    } else {
+      alert("Sách không có sẵn!!!");
+    }
+  };
+
+  return (
+    <div className="homepage-body">
+      <Navbar
+        isAuthenticated={isAuthenticated}
+        userName={userName}
+        setIsAuthenticated={setIsAuthenticated}
+      />
+      <Header />
+
+      <div className="search-container">
+        <div className="sidebar">
+          <h2>Chọn chủ đề</h2>
+          {topics.map((topic) => (
+            <div key={topic._id} className="topic-checkbox">
+              <input
+                type="checkbox"
+                value={topic.topic} 
+                checked={selectedTopics.includes(topic.topic)} 
+                onChange={handleTopicChange}
+              />
+              <label>{topic.topic}</label> 
+            </div>
+          ))}
+        </div>
+
+        <div>
+          <h2>Danh sách sách theo chủ đề</h2>
+          <div className="main-content">
+            {Array.isArray(books) && books.length > 0 ? (
+              books.map((book) => (
+                <div className="book-item" key={book.BookID}>
+                  <Link to={`/detail-book?id=${book._id}`}>
+                    <img src={book.Cover} alt={book.Title} />
+                    <strong>{book.Title}</strong>
+                  </Link>
+                  <div>
+                    Đánh giá: {book.Rating}
+                    <FontAwesomeIcon icon={faStar} className="icon-star" />
+                  </div>
+                  <button
+                    className="btn-borrow-2"
+                    onClick={() => {
+                      handleAvailable(book);
+                    }}
+                  >
+                    Mượn
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p>Không có sách nào phù hợp với chủ đề đã chọn.</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+  );
 }

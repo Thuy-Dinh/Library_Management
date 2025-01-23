@@ -140,6 +140,19 @@ async function CreateTopicApi(topic) {
     }
 }
 
+async function SearchByCategoryApi(topics) {
+    try {
+        const response = await axios.get(`http://localhost:3050/book/topic-books`, {
+            params: { topics: JSON.stringify(topics) }, // Gửi danh sách chủ đề qua query string
+        });
+    
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching books:", error.response?.data || error.message);
+        throw error;
+    }
+}  
+
 export { 
     FavoriteApi, 
     LastestBookApi, 
@@ -150,5 +163,6 @@ export {
     UpdateBookApi,
     DeleteBookApi,
     GetAllTopicApi,
-    CreateTopicApi
+    CreateTopicApi,
+    SearchByCategoryApi
 };  

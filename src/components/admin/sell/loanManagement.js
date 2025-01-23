@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faCirclePlus, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { Link } from "react-router-dom";
+// import { faMagnifyingGlass, faCirclePlus, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
+// import { Link } from "react-router-dom";
 import { GetAUserApi } from "../../../api/account";
 import { BookDetailApi } from "../../../api/book";
 import { getAllLoanApi, acceptLoanApi } from "../../../api/loan";
@@ -133,10 +134,10 @@ export default function LoanManagement() {
                                 onChange={handleChange}
                             />
                         </div>
-                        <Link to="/admin/product-management/product-create" className="btn-add">
+                        {/* <Link to="/admin/product-management/product-create" className="btn-add">
                             <FontAwesomeIcon icon={faCirclePlus} />
                             <span>Tạo đơn</span>
-                        </Link>
+                        </Link> */}
                     </div>   
                 </div>
                 
