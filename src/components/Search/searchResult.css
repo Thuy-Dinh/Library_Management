@@ -1,0 +1,20 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.search-result {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.book-detail-1 {
+    border: 1px solid #ccc;
+    padding: 20px;
+    width: 70%;
+    border-radius: 5px;
+}

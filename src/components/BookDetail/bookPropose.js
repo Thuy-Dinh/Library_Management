@@ -22,6 +22,7 @@ function BookPropose() {
         const fetchBookPropose = async () => {
             try {
                 const response = await BookProposesApi(bookId);  // Gọi API lấy dữ liệu yêu thích
+                console.log(response);
                 if (response && Array.isArray(response.bookProposes)) {
                     setBooks(response.bookProposes);  
                 } else {

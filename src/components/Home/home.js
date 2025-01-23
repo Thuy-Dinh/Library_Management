@@ -13,9 +13,11 @@ import Overview from "../admin/overview/overview";
 import UserManagement from "../admin/userManagement/userManagement";
 import ProductManagement from "../admin/bookManagament/productManagement";
 import ProductEdit from "../admin/bookManagament/productEdit";
+import ProductDetail from "../admin/bookManagament/productDetail";
 import LoanManagement from "../admin/sell/loanManagement";
 import ProductCreate from "../admin/bookManagament/productCreate";
 import SearchByCategory from "../searchByCategory/mainPage";
+import SearchResult from "../Search/searchResult";
 
 // Component bảo vệ Route
 function ProtectedRoute({ isAuthenticated, children }) {
@@ -110,11 +112,21 @@ export default function Home() {
                         <Route path="order-management" element={<LoanManagement />} />
                         <Route path="product-management/create" element={<ProductCreate />} />
                         <Route path="product-management/edit" element={<ProductEdit />} />
+                        <Route path="product-management/detail" element={<ProductDetail />} />
                     </Route>
                     <Route
                         path="/search"
                         element={
                             <SearchByCategory
+                                isAuthenticated={isAuthenticated}
+                                setIsAuthenticated={handleAuthentication}
+                            />
+                        }
+                    />
+                    <Route
+                        path="/searchResult"
+                        element={
+                            <SearchResult
                                 isAuthenticated={isAuthenticated}
                                 setIsAuthenticated={handleAuthentication}
                             />

@@ -80,7 +80,11 @@ export default function ProductManagement() {
         } catch (error) {
             console.error("Lỗi khi xóa sách:", error);
         }
-    }    
+    }  
+    
+    const handleDetail = (id) => {
+        navigate(`/admin/product-management/detail?id=${id}`);  
+    }
 
     return (
         <div className="product-container">
@@ -122,7 +126,7 @@ export default function ProductManagement() {
                         {currentRecords.map((item) => (
                             <tr key={item.BookID}>
                                 <td>{item.BookID}</td>
-                                <td>{item.Title}</td>
+                                <td style={{cursor: 'pointer'}} onClick={() => handleDetail(item._id)}>{item.Title}</td>
                                 <td>{item.Author}</td>
                                 <td>{item.Category.Name}</td>
                                 <td>{item.Subcategory}</td>

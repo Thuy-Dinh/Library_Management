@@ -105,7 +105,7 @@ export default function SearchByCategory() {
       <Header />
 
       <div className="search-container">
-        <div className="sidebar">
+        <div className="sidebar sidebar-1">
           <h2>Chọn chủ đề</h2>
           {topics.map((topic) => (
             <div key={topic._id} className="topic-checkbox">

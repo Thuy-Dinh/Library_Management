@@ -68,3 +68,48 @@
     font-size: 18px;
     color: white;
 }
+
+.dropdown {
+    position: absolute;
+    top: 446px;
+    left: 25%;
+    width: 50%;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+}
+
+.dropdown h4 {
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.dropdown ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown li {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.dropdown li:hover {
+    background-color: #f0f0f0;
+}
+
+.dropdown li:active {
+    background-color: #e0e0e0;
+}

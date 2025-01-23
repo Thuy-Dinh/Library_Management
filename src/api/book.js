@@ -153,6 +153,29 @@ async function SearchByCategoryApi(topics) {
     }
 }  
 
+async function searchSuggestionApi(keyword) {
+    try {
+        console.log(keyword);
+        const response = await axios.get(`http://localhost:3050/book/search-suggestions?keyword=${keyword}`);
+    
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching books:", error.response?.data || error.message);
+        throw error;
+    }
+}  
+
+async function SearchResultApi(keyword) {
+    try {
+        const response = await axios.get(`http://localhost:3050/book/search-result?keyword=${keyword}`);
+    
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching books:", error.response?.data || error.message);
+        throw error;
+    }
+}  
+
 export { 
     FavoriteApi, 
     LastestBookApi, 
@@ -164,5 +187,7 @@ export {
     DeleteBookApi,
     GetAllTopicApi,
     CreateTopicApi,
-    SearchByCategoryApi
+    SearchByCategoryApi,
+    searchSuggestionApi,
+    SearchResultApi
 };  

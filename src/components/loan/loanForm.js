@@ -90,11 +90,32 @@ function LoanForm() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+    
+        // Kiểm tra riêng cho trường countDay
+        if (name === "countDay") {
+            if (value > 30) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    countDay: "Số ngày mượn không được vượt quá 30.",
+                }));
+            } else if (value <= 0) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    countDay: "Số ngày mượn phải lớn hơn 0.",
+                }));
+            } else {
+                setErrors((prevErrors) => {
+                    const { countDay, ...rest } = prevErrors;
+                    return rest; // Loại bỏ lỗi của countDay nếu hợp lệ
+                });
+            }
+        }
+    
         setFormData((prevFormData) => ({
             ...prevFormData,
             [name]: value,
         }));
-    };
+    };    
 
     const handleSingleImageChange = (e, type) => {
         const file = e.target.files[0];
@@ -203,8 +224,8 @@ function LoanForm() {
                             value={formData.phone}
                             onChange={handleChange}
                         />
-                        {errors.phone && <div className="error">{errors.phone}</div>}
                     </label>
+                    {errors.phone && <div className="error">{errors.phone}</div>}
                     <label htmlFor="address">
                         <span>Địa chỉ</span>
                         <input
@@ -214,8 +235,8 @@ function LoanForm() {
                             value={formData.address}
                             onChange={handleChange}
                         />
-                        {errors.address && <div className="error">{errors.address}</div>}
                     </label>
+                    {errors.address && <div className="error">{errors.address}</div>}
                     <label htmlFor="countDay">
                         <span>Số ngày mượn (Tối đa 30 ngày)</span>
                         <input
@@ -227,9 +248,8 @@ function LoanForm() {
                             max="30"
                             min="1"
                         />
-                        {errors.countDay && <div className="error">{errors.countDay}</div>}
                     </label>
-
+                    {errors.countDay && <div className="error">{errors.countDay}</div>}
                     <label htmlFor="frontImage">
                         <span>Ảnh mặt trước CCCD</span>
                         <input

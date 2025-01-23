@@ -22,7 +22,7 @@ const Overview = () => {
   const [topBook, setTopBook] = useState([]);
   const [borrowedBooks, setBorrowedBooks] = useState(0);
 
-  const [filterType, setFilterType] = useState("day"); // 'day', 'month', 'year'
+  const [filterType, setFilterType] = useState("day"); 
 
   useEffect(() => {
     const fetchTotalBooks = async () => {
@@ -55,6 +55,7 @@ const Overview = () => {
     fetchTotalBooks();
     fetchAvailableBooks();
     fetchTopBooks();
+    handleCountBorrowedBooks(filterType);
   }, []);
 
   const handleCountBorrowedBooks = async (type) => {
