@@ -58,7 +58,7 @@ function Navbar({ isAuthenticated, userName, setIsAuthenticated }) {
                         </div>
                         {isNavigatorVisible && (
                             <div ref={wrapperRef} className="navbar-navigator">
-                                {/* <div className="navbar-item">Quản lí tài khoản</div> */}
+                                <div className="navbar-item"><Link to={"/user-inform"}>Thẻ bạn đọc</Link></div>
                                 <div className="navbar-item"><Link to={"/all-Loan"}>Lịch sử mượn sách</Link></div>
                                 <div className="navbar-item" onClick={handleLogout}>
                                     Đăng xuất

@@ -15,12 +15,17 @@ async function ComfirmApi() {
     }
 }
 
-async function SignupApi(name, email, password) {
+async function SignupApi(name, email, password, cccd, phone, address, age, gender) {
     try {
         const response = await axios.post('http://localhost:3050/signup', {
             name: name,
             email: email,
-            password: password
+            password: password,
+            cccd: cccd,
+            phone: phone,
+            address: address,
+            age: age,
+            gender: gender
         });
 
         return response.data;
@@ -58,9 +63,9 @@ async function GetAllUserApi() {
     }
 }
 
-async function GetAUserApi(id) {
+async function GetAUserApi(code) {
     try {
-        const response = await axios.post('http://localhost:3050/get-user', { id });
+        const response = await axios.post('http://localhost:3050/get-user', { code });
 
         return response.data;
     } catch (error) {

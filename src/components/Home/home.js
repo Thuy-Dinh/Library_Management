@@ -18,6 +18,8 @@ import LoanManagement from "../admin/sell/loanManagement";
 import ProductCreate from "../admin/bookManagament/productCreate";
 import SearchByCategory from "../searchByCategory/mainPage";
 import SearchResult from "../Search/searchResult";
+import LibraryCard from "../LibraryCard/libraryCard";
+import LoanCreate from "../admin/sell/loanCreate";
 
 // Component bảo vệ Route
 function ProtectedRoute({ isAuthenticated, children }) {
@@ -113,6 +115,7 @@ export default function Home() {
                         <Route path="product-management/create" element={<ProductCreate />} />
                         <Route path="product-management/edit" element={<ProductEdit />} />
                         <Route path="product-management/detail" element={<ProductDetail />} />
+                        <Route path="order-management/order-create" element={<LoanCreate />} />
                     </Route>
                     <Route
                         path="/search"
@@ -127,6 +130,15 @@ export default function Home() {
                         path="/searchResult"
                         element={
                             <SearchResult
+                                isAuthenticated={isAuthenticated}
+                                setIsAuthenticated={handleAuthentication}
+                            />
+                        }
+                    />
+                    <Route
+                        path="/user-inform"
+                        element={
+                            <LibraryCard
                                 isAuthenticated={isAuthenticated}
                                 setIsAuthenticated={handleAuthentication}
                             />

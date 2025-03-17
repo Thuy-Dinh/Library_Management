@@ -17,7 +17,8 @@ function LoanForm() {
     const [errors, setErrors] = useState({});
     
     const storedName = localStorage.getItem('userName');
-    const storedEmail = localStorage.getItem('userEmail');
+    const storedCode = localStorage.getItem('userCode');
+    // const storedEmail = localStorage.getItem('userEmail');
     const storedToken = localStorage.getItem('userToken');
 
     const [isAuthenticated, setIsAuthenticated] = useState(false); // Quản lý trạng thái đăng nhập
@@ -34,17 +35,19 @@ function LoanForm() {
 
     const [formData, setFormData] = useState({
         name: storedName || '',
-        email: storedEmail || '',
-        phone: '',
-        address: '',
+        code: storedCode || '',
+        // email: storedEmail || '',
+        // phone: '',
+        // address: '',
         countDay: 1,
-        frontImage: null,
-        backImage: null,
+        // frontImage: null,
+        // backImage: null,
         note: '',
+        method: 'Mượn về nhà'
     });
     
-    const [previewFront, setPreviewFront] = useState(null);
-    const [previewBack, setPreviewBack] = useState(null);
+    // const [previewFront, setPreviewFront] = useState(null);
+    // const [previewBack, setPreviewBack] = useState(null);
 
     useEffect(() => {
         if (!bookId) {
@@ -72,13 +75,13 @@ function LoanForm() {
         fetchBookDetail();
     }, [bookId]);
 
-    // Giải phóng bộ nhớ khi unmount
-    useEffect(() => {
-        return () => {
-            if (previewFront) URL.revokeObjectURL(previewFront);
-            if (previewBack) URL.revokeObjectURL(previewBack);
-        };
-    }, [previewFront, previewBack]);
+    // // Giải phóng bộ nhớ khi unmount
+    // useEffect(() => {
+    //     return () => {
+    //         if (previewFront) URL.revokeObjectURL(previewFront);
+    //         if (previewBack) URL.revokeObjectURL(previewBack);
+    //     };
+    // }, [previewFront, previewBack]);
 
     if (loading) {
         return <div>Đang tải...</div>;
@@ -117,39 +120,39 @@ function LoanForm() {
         }));
     };    
 
-    const handleSingleImageChange = (e, type) => {
-        const file = e.target.files[0];
+    // const handleSingleImageChange = (e, type) => {
+    //     const file = e.target.files[0];
 
-        if (!file) return;
+    //     if (!file) return;
 
-        const validFormats = ['image/jpeg', 'image/png', 'image/jpg'];
+    //     const validFormats = ['image/jpeg', 'image/png', 'image/jpg'];
 
-        if (!validFormats.includes(file.type)) {
-            alert('Chỉ chấp nhận ảnh định dạng JPEG, PNG, JPG!');
-            return;
-        }
+    //     if (!validFormats.includes(file.type)) {
+    //         alert('Chỉ chấp nhận ảnh định dạng JPEG, PNG, JPG!');
+    //         return;
+    //     }
 
-        if (file.size > 5 * 1024 * 1024) {
-            alert('Kích thước ảnh phải nhỏ hơn 5MB!');
-            return;
-        }
+    //     if (file.size > 5 * 1024 * 1024) {
+    //         alert('Kích thước ảnh phải nhỏ hơn 5MB!');
+    //         return;
+    //     }
 
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            [type]: file,
-        }));
+    //     setFormData((prevFormData) => ({
+    //         ...prevFormData,
+    //         [type]: file,
+    //     }));
 
-        if (type === 'frontImage') {
-            setPreviewFront(URL.createObjectURL(file));
-        } else if (type === 'backImage') {
-            setPreviewBack(URL.createObjectURL(file));
-        }
-    };
+    //     if (type === 'frontImage') {
+    //         setPreviewFront(URL.createObjectURL(file));
+    //     } else if (type === 'backImage') {
+    //         setPreviewBack(URL.createObjectURL(file));
+    //     }
+    // };
 
-    const validatePhone = (phone) => {
-        const phoneRegex = /^[0-9]{10,12}$/;
-        return phoneRegex.test(phone);
-    };
+    // const validatePhone = (phone) => {
+    //     const phoneRegex = /^[0-9]{10,12}$/;
+    //     return phoneRegex.test(phone);
+    // };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -157,18 +160,18 @@ function LoanForm() {
         // Kiểm tra các trường thông tin
         let formErrors = {};
 
-        if (!formData.phone || !validatePhone(formData.phone)) {
-            formErrors.phone = 'Vui lòng nhập số điện thoại hợp lệ.';
-        }
-        if (!formData.address) {
-            formErrors.address = 'Vui lòng nhập địa chỉ.';
-        }
+        // if (!formData.phone || !validatePhone(formData.phone)) {
+        //     formErrors.phone = 'Vui lòng nhập số điện thoại hợp lệ.';
+        // }
+        // if (!formData.address) {
+        //     formErrors.address = 'Vui lòng nhập địa chỉ.';
+        // }
         if (formData.countDay <= 0 || formData.countDay > 30) {
             formErrors.countDay = 'Số ngày mượn phải trong khoảng từ 1 đến 30.';
         }
-        if (!formData.frontImage || !formData.backImage) {
-            formErrors.idCardImages = 'Vui lòng upload ảnh CCCD.';
-        }
+        // if (!formData.frontImage || !formData.backImage) {
+        //     formErrors.idCardImages = 'Vui lòng upload ảnh CCCD.';
+        // }
 
         setErrors(formErrors);
 
@@ -176,7 +179,8 @@ function LoanForm() {
         if (Object.keys(formErrors).length > 0) return;
 
         try {
-            await CreateLoanApi(formData.email, bookId, formData.phone, formData.address, formData.countDay, formData.frontImage, formData.backImage, formData.note);
+            // await CreateLoanApi(formData.email, bookId, formData.phone, formData.address, formData.countDay, formData.frontImage, formData.backImage, formData.note);
+            await CreateLoanApi(formData.code, bookId, formData.countDay, formData.note, formData.method);
             navigate("/request");
         } catch (error) {
             alert('Đăng ký thất bại, vui lòng thử lại.');
@@ -200,11 +204,11 @@ function LoanForm() {
                             id="name"
                             name="name"
                             value={formData.name}
-                            onChange={handleChange}
                             readOnly
                         />
                     </label>
-                    <label htmlFor="Email">
+
+                    {/* <label htmlFor="Email">
                         <span>Email</span>
                         <input
                             type="email"
@@ -236,7 +240,7 @@ function LoanForm() {
                             onChange={handleChange}
                         />
                     </label>
-                    {errors.address && <div className="error">{errors.address}</div>}
+                    {errors.address && <div className="error">{errors.address}</div>} */}
                     <label htmlFor="countDay">
                         <span>Số ngày mượn (Tối đa 30 ngày)</span>
                         <input
@@ -250,7 +254,18 @@ function LoanForm() {
                         />
                     </label>
                     {errors.countDay && <div className="error">{errors.countDay}</div>}
-                    <label htmlFor="frontImage">
+
+                    <label htmlFor="payment">
+                        <span>Cọc (Thanh toán tiền cọc trực tiếp tại thư viện)</span>
+                        <input
+                            type="text"
+                            id="payment"
+                            name="payment"
+                            value="100.000 đồng"
+                            readOnly
+                        />
+                    </label>
+                    {/* <label htmlFor="frontImage">
                         <span>Ảnh mặt trước CCCD</span>
                         <input
                             type="file"
@@ -276,7 +291,7 @@ function LoanForm() {
                         {previewBack && <img src={previewBack} alt="Preview Back" className="image-preview" />}
                     </div>
 
-                    {errors.idCardImages && <div className="error">{errors.idCardImages}</div>}
+                    {errors.idCardImages && <div className="error">{errors.idCardImages}</div>} */}
 
                     <label htmlFor="note">
                         <span>Ghi chú</span>

@@ -10,6 +10,11 @@ export default function Signup({ setIsAuthenticated }) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [cccd, setCccd] = useState('');
+    const [phone, setPhone] = useState('');
+    const [address, setAddress] = useState('');
+    const [age, setAge] = useState('');
+    const [gender, setGender] = useState('');
     const [isShowPassword, setIsShowPassword] = useState(false);
     const [errMessage, setErrMessage] = useState('');
     const navigate = useNavigate();
@@ -23,11 +28,9 @@ export default function Signup({ setIsAuthenticated }) {
 
     const handleSignup = async () => {
         setErrMessage('');
-        console.log(username);
-        console.log(email);
-        console.log(password);
+
         try {
-            const data = await SignupApi(username, email, password);
+            const data = await SignupApi(username, email, password, cccd, phone, address, age, gender);
             if (data && data.errCode !== 0) {
                 setErrMessage(data.message);
             } else {
@@ -57,8 +60,9 @@ export default function Signup({ setIsAuthenticated }) {
             <div className='signup-container-left'>
                 <div className='signup-content'>
                     <div className='text-title'>Tạo một tài khoản mới</div>
+
                     <div className='form-group signup-input'>
-                        <label>Tên người dùng</label>
+                        <label>Họ Tên</label>
                         <input
                             type='text'
                             className='form-control'
@@ -67,6 +71,7 @@ export default function Signup({ setIsAuthenticated }) {
                             onChange={(e) => setUsername(e.target.value)}
                         />
                     </div>
+
                     <div className='form-group signup-input'>
                         <label>Email</label>
                         <input
@@ -77,6 +82,7 @@ export default function Signup({ setIsAuthenticated }) {
                             onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
+
                     <div className='form-group signup-input'>
                         <label>Mật khẩu</label>
                         <div className='custom-password'>
@@ -92,27 +98,95 @@ export default function Signup({ setIsAuthenticated }) {
                             </span>
                         </div>
                     </div>
+
+                    <div className='form-group signup-input-row'>
+                        <div className='signup-input'>
+                            <label>Số CCCD</label>
+                            <input
+                                type='text'
+                                className='form-control'
+                                placeholder='Nhập số CCCD'
+                                value={cccd}
+                                onChange={(e) => setCccd(e.target.value)}
+                            />
+                        </div>
+
+                        <div className='signup-input'>
+                            <label>Số điện thoại</label>
+                            <input
+                                type='text'
+                                className='form-control'
+                                placeholder='Nhập số điện thoại'
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    <div className='form-group signup-input'>
+                        <label>Địa chỉ</label>
+                        <input
+                            type='text'
+                            className='form-control'
+                            placeholder='Nhập địa chỉ'
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                        />
+                    </div>
+
+                    <div className='form-group signup-input-row'>
+                        <div className='signup-input'>
+                            <label>Tuổi</label>
+                            <input
+                                type='number'
+                                className='form-control'
+                                placeholder='Nhập tuổi'
+                                value={age}
+                                onChange={(e) => setAge(e.target.value)}
+                            />
+                        </div>
+
+                        <div className='signup-input'>
+                            <label>Giới tính</label>
+                            <select
+                                className='form-control'
+                                value={gender}
+                                onChange={(e) => setGender(e.target.value)}
+                            >
+                                <option value="">Chọn giới tính</option>
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                                <option value="Không xác định">Không xác định</option>
+                            </select>
+                        </div>
+
+                    </div>
+
                     <div style={{ color: 'red', paddingBottom: 15 }}>
                         {errMessage}
                     </div>
+
                     <div className='text-center'>
                         <button className='text-signup' onClick={handleSignup}>Đăng ký</button>
                     </div>
-                    <div className='text-center other-signup'>
+
+                    {/* <div className='text-center other-signup'>
                         <div className='line'></div>
                         <div>Hoặc đăng ký bằng</div>
                         <div className='line'></div>
                     </div>
+
                     <div className='social-signup'>
                         <FontAwesomeIcon icon={faGoogle} className="social-icon" />
                         <FontAwesomeIcon icon={faFacebook} className="social-icon" />
-                    </div>
+                    </div> */}
                 </div>
             </div>
+
             <div className='signup-container-right'>
-                    <div className='text-center text-welcome'>Chào mừng trở lại!</div>
-                    <p className='text-center'>Bạn đã có tài khoản? Để tiếp tục công việc, hãy đăng nhập.</p>
-                    <button className='login-btn' onClick={handleLoginRedirect}>Đăng nhập</button>
+                <div className='text-center text-welcome'>Chào mừng trở lại!</div>
+                <p className='text-center'>Bạn đã có tài khoản? Để tiếp tục công việc, hãy đăng nhập.</p>
+                <button className='login-btn' onClick={handleLoginRedirect}>Đăng nhập</button>
             </div>
         </div>
     );

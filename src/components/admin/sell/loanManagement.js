@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faMagnifyingGlass, faCirclePlus, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { faMagnifyingGlass, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
-// import { Link } from "react-router-dom";
+import { faMagnifyingGlass, faCirclePlus, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
+// import { faMagnifyingGlass, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { Link } from "react-router-dom";
 import { GetAUserApi } from "../../../api/account";
 import { BookDetailApi } from "../../../api/book";
 import { getAllLoanApi, acceptLoanApi } from "../../../api/loan";
@@ -43,7 +43,6 @@ export default function LoanManagement() {
                     setUsers(userData);
 
                     const bookIds = [...new Set(loans.allLoan.map((item) => item.BookID))];
-                    console.log(bookIds);
                     const bookRequests = bookIds.map((id) => BookDetailApi(id));
                     const bookResponses = await Promise.all(bookRequests);
 
@@ -54,6 +53,7 @@ export default function LoanManagement() {
                         bookData[bookIds[index]] = bookDetail;
                     });
 
+                    console.log(bookData);
                     setBooks(bookData);
                 } else {
                     console.error("Dữ liệu không hợp lệ:", loans);
@@ -75,7 +75,6 @@ export default function LoanManagement() {
             const loans = await getAllLoanApi(email);
             if (loans && Array.isArray(loans.allLoan)) {
                 setData(loans.allLoan);  // Cập nhật lại dữ liệu sau khi duyệt
-                console.log(loans)
             } else {
                 console.error("Dữ liệu không hợp lệ:", loans);
             }
@@ -134,10 +133,10 @@ export default function LoanManagement() {
                                 onChange={handleChange}
                             />
                         </div>
-                        {/* <Link to="/admin/product-management/product-create" className="btn-add">
+                        <Link to="/admin/order-management/order-create" className="btn-add">
                             <FontAwesomeIcon icon={faCirclePlus} />
                             <span>Tạo đơn</span>
-                        </Link> */}
+                        </Link>
                     </div>   
                 </div>
                 
@@ -166,7 +165,11 @@ export default function LoanManagement() {
                                 <tr key={item.LoanID}>
                                     <td>{autoIncrementID}</td>
                                     <td>{user.Name}</td>
-                                    <td>{book.Title}</td>
+                                    <td>
+                                        {Array.isArray(books[item.BookID]) 
+                                            ? books[item.BookID].map(book => <div key={book._id}>{book.Title}</div>) 
+                                            : books[item.BookID]?.Title}
+                                    </td>
                                     <td>
                                         {dayjs(item.DayStart, "DD/MM/YYYY")
                                             .tz("Asia/Ho_Chi_Minh")

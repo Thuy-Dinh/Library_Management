@@ -86,6 +86,8 @@ function AllLoan() {
                                         <div style={{fontSize: 30, fontWeight: 'bold'}}>{book.Title}</div>
                                         <div><span style={{fontWeight: 'bold'}}>Ngày mượn: </span>{item.DayStart}</div>
                                         <div><span style={{fontWeight: 'bold'}}>Hạn trả: </span>{item.DayEnd}</div>
+                                        <div><span style={{fontWeight: 'bold'}}>Hình thức mượn: </span>{item.Method}</div>
+                                        <div><span style={{fontWeight: 'bold'}}>Cọc: </span>{item.Payment}</div>
                                         <div><span style={{fontWeight: 'bold'}}>Ghi chú: </span>{item.Note ? item.Note : "Không có ghi chú"}</div>
                                         <div><span style={{fontWeight: 'bold'}}>Trạng thái: </span><span style={{color: 'red'}}>{item.State}</span></div>
                                     </div>   

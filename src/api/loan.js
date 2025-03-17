@@ -1,23 +1,19 @@
 import axios from 'axios';
 
-async function CreateLoanApi(userEmail, bookID, phone, address, countDay, frontImage, backImage, note) {
-    console.log(userEmail);
+async function CreateLoanApi(code, bookID, countDay, note, method) {
+    console.log(code);
     // Prepare the data to be sent in the request
     const formData = new FormData();
-    formData.append('userEmail', userEmail);
+    formData.append('code', code);
     formData.append('bookID', bookID);
-    formData.append('phone', phone);
-    formData.append('address', address);
     formData.append('countDay', countDay);
-    formData.append('frontImage', frontImage);
-    formData.append('backImage', backImage);
     formData.append('note', note);
 
     console.log(formData);
 
     try {
         // Make the POST request to the server API
-        const response = await axios.post('http://localhost:3050/loan/create-loan', {userEmail, bookID, phone, address, countDay, frontImage, backImage, note}, {
+        const response = await axios.post('http://localhost:3050/loan/create-loan', {code, bookID, countDay, note, method}, {
             headers: {
                 'Content-Type': 'multipart/form-data', 
                 "x-rapidapi-host": "file-upload8.p.rapidapi.com",

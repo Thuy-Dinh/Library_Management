@@ -10,7 +10,7 @@ function Footer() {
                 <h3>Liên lạc</h3>
                 <h4>Số 1, Đại Cồ Việt</h4>
                 <h4>Hai Bà Trưng, Hà Nội</h4>
-                <h4>Email: bookstory@gmail.com</h4>
+                <h4>Email: 4evershop4@gmail.com</h4>
                 <h4>Phone: (+84)964406858</h4>
             </div>
             <div className='footer-center'>

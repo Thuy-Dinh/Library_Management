@@ -37,11 +37,13 @@ export default function UserManagement() {
         const name = item.Name?.toLowerCase() ?? "";
         const email = item.Email?.toLowerCase() ?? "";
         const phone = item.Phone?.toLowerCase() ?? "";
+        const cccd = item.CCCDNumber?.toLowerCase() ?? "";
         
         return (
             name.includes(searchInput.toLowerCase()) ||
             email.includes(searchInput.toLowerCase()) ||
-            phone.includes(searchInput.toLowerCase())
+            phone.includes(searchInput.toLowerCase()) ||
+            cccd.includes(searchInput.toLowerCase()) 
         );
     }) || [];      
 
@@ -75,7 +77,7 @@ export default function UserManagement() {
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
                     <input
                         name="search"
-                        placeholder="Nhập Tên/ Email/ Số điện thoại"
+                        placeholder="Nhập Tên/ Email/ Số điện thoại/ Số CCCD"
                         value={searchInput}
                         onChange={handleChange}
                     />
@@ -85,11 +87,12 @@ export default function UserManagement() {
             <table className="user-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Mã thẻ</th>
                         <th>Email</th>
                         <th>Tên</th>
                         <th>Giới tính</th>
                         <th>Tuổi</th>
+                        <th>Số CCCD</th>
                         <th>Số điện thoại</th>
                         <th>Địa chỉ</th>
                         <th>Hành động</th>
@@ -98,11 +101,12 @@ export default function UserManagement() {
                 <tbody>
                     {currentRecords.map((item, index) => (
                         <tr key={item.AccountID || index}>
-                            <td>{item.AccountID}</td>
+                            <td>{item.LbCode}</td>
                             <td>{item.Email}</td>
                             <td>{item.Name}</td>
                             <td>{item.Gender}</td>
                             <td>{item.Age}</td>
+                            <td>{item.CCCDNumber}</td>
                             <td>{item.Phone}</td>
                             <td>{item.Address}</td>
                             <td>

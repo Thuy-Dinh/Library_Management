@@ -42,6 +42,7 @@ export default function Login({ setIsAuthenticated }) {
                 // Lưu thông tin người dùng vào localStorage
                 localStorage.setItem('userName', response.account.Name);
                 localStorage.setItem('userEmail', response.account.Email);
+                localStorage.setItem('userCode', response.account.LbCode);
                 setIsAuthenticated(true); // Cập nhật trạng thái đăng nhập
 
                 if(response.account.Role === 'user') {
@@ -118,7 +119,7 @@ export default function Login({ setIsAuthenticated }) {
                 <div className='col-12 forgot-password'>
                     <span>Quên mật khẩu?</span>
                 </div>
-                <div className='other-login'>
+                {/* <div className='other-login'>
                     <div className='line'></div>
                     <div>Hoặc đăng nhập bằng</div>
                     <div className='line'></div>
@@ -126,7 +127,7 @@ export default function Login({ setIsAuthenticated }) {
                 <div className='col-12 social-login'>
                     <i><FontAwesomeIcon icon={faGoogle}/></i>
                     <i><FontAwesomeIcon icon={faFacebook}/></i>
-                </div>
+                </div> */}
             </div>
         </div>
     );

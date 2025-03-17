@@ -1,0 +1,116 @@
+/* Container chính của form */
+.book-loan-form-container {
+    width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Tiêu đề */
+.book-loan-form-container h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Nhóm input */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Ô nhập mã sách + nút thêm */
+.book-code-input {
+    display: flex;
+    gap: 10px;
+}
+
+.book-code-input input {
+    flex: 1;
+}
+
+.book-code-input button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.book-code-input button:hover {
+    background-color: #218838;
+}
+
+/* Danh sách mã sách */
+.book-code-list {
+    margin-top: 15px;
+    text-align: left;
+}
+
+.book-code-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.book-code-list li {
+    background: #e9ecef;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Nút xoá mã sách */
+.book-code-list button {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.book-code-list button:hover {
+    background: #c82333;
+}
+
+/* Nút submit */
+button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Thông báo lỗi */
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 10px;
+}

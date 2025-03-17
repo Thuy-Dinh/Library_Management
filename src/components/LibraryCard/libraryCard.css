@@ -1,0 +1,39 @@
+.library-card-container {
+    max-width: 500px;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.library-card-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.library-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 16px;
+}
+
+.library-card-info div {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.library-card-info strong {
+    color: #007bff;
+}
+
+.library-card-container .error-message {
+    color: red;
+    font-weight: bold;
+}

@@ -20,6 +20,7 @@ function BookDescription({ isAuthenticated }) {
         const fetchBookDetail = async () => {
             try {
                 const response = await BookDetailApi(bookId); 
+                console.log(response.bookDetail);
                 if (response) {
                     setBookDetail(response.bookDetail);  
                 } else {
@@ -57,26 +58,34 @@ function BookDescription({ isAuthenticated }) {
         }
     }
 
+    const book = bookDetail.length > 0 ? bookDetail[0] : null; 
+
     return (
         <div className='book-description'>
-            <div className='detail-text'>Chi tiết sách</div>
-            <div className='book-detail'>
-                <img src={bookDetail.Cover} alt="Book Cover"/>
-                <div className='detail-item'>
-                    <div style={{ fontWeight: "bold", fontSize: 28 }}>{bookDetail.Title}</div>
-                    <div>Tác giả: {bookDetail.Author}</div>
-                    <div>Nhà xuất bản: {bookDetail.Publisher}</div>
-                    <div>Năm xuất bản: {bookDetail.Publication_year}</div>
-                    <div>Tái bản lần thứ {bookDetail.Edition = "First" ? "nhất" : "hai"}</div>
-                    <div>Ngôn ngữ: {bookDetail.Language}</div>
-                    <div>
-                        {bookDetail.Rating}
-                        <FontAwesomeIcon icon={faStar} className='icon-star'/>
+            {book ? (
+                <>
+                    <div className='detail-text'>Chi tiết sách</div>
+                    <div className='book-detail'>
+                        <img src={book.Cover} alt="Book Cover"/>
+                        <div className='detail-item'>
+                            <div style={{ fontWeight: "bold", fontSize: 28 }}>{book.Title}</div>
+                            <div>Tác giả: {book.Author}</div>
+                            <div>Nhà xuất bản: {book.Publisher}</div>
+                            <div>Năm xuất bản: {book.Publication_year}</div>
+                            <div>Tái bản lần thứ {book.Edition === "First" ? "nhất" : "hai"}</div>
+                            <div>Ngôn ngữ: {book.Language}</div>
+                            <div>
+                                {book.Rating}
+                                <FontAwesomeIcon icon={faStar} className='icon-star'/>
+                            </div>
+                            <div>Tóm tắt: {book.Summary}</div>
+                            <button className='btn-borrow-detail' onClick={() => handleAvailable(book)}>Mượn</button>
+                        </div>
                     </div>
-                    <div>Tóm tắt: {bookDetail.Summary}</div>
-                    <button className='btn-borrow-detail' onClick={() => {handleAvailable(bookDetail)}}>Mượn</button>
-                </div>
-            </div>
+                </>
+            ) : (
+                <div>Không tìm thấy sách</div>
+            )}
         </div>
     );
 }
