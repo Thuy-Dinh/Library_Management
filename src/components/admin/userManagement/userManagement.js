@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
-import { GetAllUserApi } from "../../../api/account";
+import { faMagnifyingGlass, faPenToSquare, faUserSlash, faUserCheck } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
+import { GetAllUserApi, UpdateUserStateApi } from "../../../api/account"; // Thêm API cập nhật trạng thái
 import "./userManagement.css";
 
 export default function UserManagement() {
@@ -13,20 +13,21 @@ export default function UserManagement() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const users = await GetAllUserApi();
-                if (users && Array.isArray(users.allUser)) {
-                    setData(users.allUser);  // Chỉ set data nếu là mảng hợp lệ
-                } else {
-                    console.error("Dữ liệu không hợp lệ:", users);
-                }
-            } catch (error) {
-                console.error("Lỗi khi lấy dữ liệu:", error);
-            }
-        };
         fetchData();
-    }, []);    
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            const users = await GetAllUserApi();
+            if (users && Array.isArray(users.allUser)) {
+                setData(users.allUser);
+            } else {
+                console.error("Dữ liệu không hợp lệ:", users);
+            }
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu:", error);
+        }
+    };
 
     const handleChange = (e) => {
         setSearchInput(e.target.value);
@@ -45,10 +46,9 @@ export default function UserManagement() {
             phone.includes(searchInput.toLowerCase()) ||
             cccd.includes(searchInput.toLowerCase()) 
         );
-    }) || [];      
+    }) || [];
 
     const totalPages = filteredData.length > 0 ? Math.ceil(filteredData.length / recordsPerPage) : 1;
-
     const indexOfLastRecord = currentPage * recordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
     const currentRecords = filteredData.slice(indexOfFirstRecord, indexOfLastRecord);
@@ -67,6 +67,17 @@ export default function UserManagement() {
 
     const handleEdit = (user) => {
         navigate("/admin/user-management/user-edit", { state: { user } });
+    };
+
+    const handleUpdateState = async (id, newState) => {
+        try {
+            console.log(id);
+            console.log(newState);
+            await UpdateUserStateApi(id, newState);
+            fetchData(); // Reload danh sách sau khi cập nhật trạng thái
+        } catch (error) {
+            console.error("Lỗi khi cập nhật trạng thái:", error);
+        }
     };
 
     return (
@@ -95,6 +106,7 @@ export default function UserManagement() {
                         <th>Số CCCD</th>
                         <th>Số điện thoại</th>
                         <th>Địa chỉ</th>
+                        <th>Trạng thái</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -109,14 +121,27 @@ export default function UserManagement() {
                             <td>{item.CCCDNumber}</td>
                             <td>{item.Phone}</td>
                             <td>{item.Address}</td>
+                            <td>{item.State}</td>
                             <td>
                                 <div className="user-btn">
-                                    <button className="btn-edit" onClick={() => handleEdit(item)}>
+                                    {/* <button className="btn-edit" onClick={() => handleEdit(item)}>
                                         <FontAwesomeIcon icon={faPenToSquare} />
-                                    </button>
-                                    {/* <button className="btn-delete">
-                                        <FontAwesomeIcon icon={faTrash} />
                                     </button> */}
+                                    {item.State !== "Limited" && (
+                                        <button className="btn-limit" onClick={() => handleUpdateState(item._id, "limited")}>
+                                            <FontAwesomeIcon icon={faUserSlash} /> Hạn chế
+                                        </button>
+                                    )}
+                                    {item.State !== "UnActive" && (
+                                        <button className="btn-block" onClick={() => handleUpdateState(item._id, "unActive")}>
+                                            <FontAwesomeIcon icon={faUserSlash} /> Khóa
+                                        </button>
+                                    )}
+                                    {item.State !== "Active" && (
+                                        <button className="btn-unlock" onClick={() => handleUpdateState(item._id, "active")}>
+                                            <FontAwesomeIcon icon={faUserCheck} /> Mở khóa
+                                        </button>
+                                    )}
                                 </div>
                             </td>
                         </tr>

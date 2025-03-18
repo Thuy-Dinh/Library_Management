@@ -37,11 +37,11 @@ function AllLoan() {
                 const bookRequests = bookIds.map((id) => BookDetailApi(id));
                 const bookResponses = await Promise.all(bookRequests);
     
-                // Ánh xạ BookID với chi tiết sách
+                // Ánh xạ BookID với chi tiết sách (chỉ lấy phần tử đầu tiên)
                 const bookData = {};
                 bookResponses.forEach((response, index) => {
                     const bookDetail = response.bookDetail;
-                    bookData[bookIds[index]] = bookDetail;
+                    bookData[bookIds[index]] = bookDetail.length > 0 ? bookDetail[0] : {}; 
                 });
     
                 setBooks(bookData); // Lưu trữ ánh xạ BookID -> bookDetail

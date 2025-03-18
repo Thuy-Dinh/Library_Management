@@ -69,7 +69,7 @@ function LoanCreate() {
         console.log("Dữ liệu đơn mượn:", formData);
         alert("Đơn mượn sách đã được gửi!");
 
-        await CreateLoanApi(formData.lbCode, formData.bookCodes, 1, null, formData.borrowType); 
+        await CreateLoanApi(formData.lbCode, formData.bookCodes, 1, null, formData.borrowType, 0); 
         
         handleExportPDF(); // Xuất PDF sau khi tạo đơn mượn
         

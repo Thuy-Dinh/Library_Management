@@ -75,10 +75,21 @@ async function GetAUserApi(code) {
     }
 }
 
+async function UpdateUserStateApi(id, state) {
+    try {
+        const response = await axios.post("http://localhost:3050/limited", { id, state });
+        return response.data;
+    } catch (error) {
+        console.error("Lỗi cập nhật trạng thái:", error);
+        throw error;
+    }
+};
+
 export { 
     SignupApi,
     LoginApi,
     ComfirmApi,
     GetAllUserApi,
-    GetAUserApi
+    GetAUserApi,
+    UpdateUserStateApi
 };  

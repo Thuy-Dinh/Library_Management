@@ -43,7 +43,8 @@ function LoanForm() {
         // frontImage: null,
         // backImage: null,
         note: '',
-        method: 'Mượn về nhà'
+        method: 'Mượn về nhà',
+        payment: ''
     });
     
     // const [previewFront, setPreviewFront] = useState(null);
@@ -59,8 +60,8 @@ function LoanForm() {
         const fetchBookDetail = async () => {
             try {
                 const response = await BookDetailApi(bookId);
-                if (response?.bookDetail) {
-                    setBookDetail(response.bookDetail);
+                if (Array.isArray(response.bookDetail) && response.bookDetail.length > 0) {
+                    setBookDetail(response.bookDetail[0]);
                 } else {
                     setError('Dữ liệu không hợp lệ');
                 }
@@ -74,6 +75,13 @@ function LoanForm() {
 
         fetchBookDetail();
     }, [bookId]);
+
+    useEffect(() => {
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            payment: `${bookDetail?.Price ? Number(bookDetail.Price) / 2 : 0} VNĐ`
+        }));
+    }, [bookDetail]);    
 
     // // Giải phóng bộ nhớ khi unmount
     // useEffect(() => {
@@ -180,8 +188,12 @@ function LoanForm() {
 
         try {
             // await CreateLoanApi(formData.email, bookId, formData.phone, formData.address, formData.countDay, formData.frontImage, formData.backImage, formData.note);
-            await CreateLoanApi(formData.code, bookId, formData.countDay, formData.note, formData.method);
-            navigate("/request");
+            const response = await CreateLoanApi(formData.code, bookId, formData.countDay, formData.note, formData.method, formData.payment);
+            if (response.errCode === 0) {
+                navigate("/request");
+            } else {
+                alert(response.message);
+            }
         } catch (error) {
             alert('Đăng ký thất bại, vui lòng thử lại.');
             console.error(error);
@@ -261,7 +273,7 @@ function LoanForm() {
                             type="text"
                             id="payment"
                             name="payment"
-                            value="100.000 đồng"
+                            value={`${bookDetail?.Price ? Number(bookDetail.Price) / 2 : 0} VNĐ`}
                             readOnly
                         />
                     </label>
