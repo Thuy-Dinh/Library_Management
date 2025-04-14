@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import jsPDF from 'jspdf'; // Import thư viện jsPDF
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable'; // thêm dòng này
+import { font } from '../../../font/Roboto-Regular-normal';
 import './loanCreate.css'; 
-import { CreateLoanApi } from '../../../api/loan';
+import { CreateLoanApi, getALoanApi } from '../../../api/loan';
 
 function LoanCreate() {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
+        loanCode: '',
         lbCode: '',
         bookCodes: [],
         bookCodeInput: '',
@@ -39,43 +42,128 @@ function LoanCreate() {
             bookCodes: prevState.bookCodes.filter((_, i) => i !== index)
         }));
     };
-
-    const handleExportPDF = () => {
+ 
+    const handleExportPDF = (newLoanCode) => { 
         const doc = new jsPDF();
-        doc.setFont('Verdana');
+        
+        // Thêm font và cài đặt font
+        doc.addFileToVFS("Roboto.ttf", font);
+        doc.addFont("Roboto.ttf", "Roboto", "normal");
+        doc.setFont("Roboto");
+    
+        // Thêm logo (Giả sử logo của thư viện ở đường dẫn này)
+        const logo = '/Logo-SVG.png';  // Thay đổi đường dẫn logo của bạn
+        doc.addImage(logo, 'PNG', 175, 10, 20, 20);  // Thêm logo vào vị trí (10, 10)
+    
+        // Tiêu đề Hóa Đơn
         doc.setFontSize(16);
-        doc.text('Đơn Mượn Sách', 20, 20);
-        
-        doc.setFontSize(12);
-        doc.text(`Mã thẻ bạn đọc: ${formData.lbCode}`, 20, 40);
-        doc.text(`Hình thức mượn: ${formData.borrowType}`, 20, 50);
-        
-        doc.text('Danh sách mã sách:', 20, 65);
-        formData.bookCodes.forEach((code, index) => {
-            doc.text(`${index + 1}. ${code}`, 30, 75 + index * 10);
-        });
+        doc.setTextColor(0, 102, 204);  // Màu xanh cho tiêu đề
+        doc.text('PHIẾU MƯỢN SÁCH', 85, 35);  // Vị trí tiêu đề
 
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0); 
+        doc.text(`${newLoanCode}`, 20, 25);
+        doc.text('Thư viện BokStory', 140, 20);  // Vị trí tiêu đề
+        doc.text('Số 1, Đại Cồ Việt, Hai Bà Trưng, Hà Nội', 100, 25);  // Vị trí tiêu đề
+    
+        // Thông tin khách hàng và hóa đơn
+        doc.setFontSize(12);
+        doc.setTextColor(255, 10, 10); 
+        doc.text(`🧾 Mã thẻ bạn đọc: ${formData.lbCode}`, 20, 45);
+        doc.text(`📦 Hình thức mượn: ${formData.borrowType}`, 20, 55);
+        doc.text(`🗓️ Ngày tạo: ${new Date().toLocaleDateString('vi-VN')}`, 20, 65);
+    
+        // Tạo khung bao quanh thông tin
+        doc.rect(10, 10, 190, 160);  // Vẽ khung bao quanh phần thông tin (x, y, width, height)
+    
+        // Dữ liệu bảng
+        const tableData = formData.bookCodes.map((code, index) => [
+            index + 1,
+            code
+        ]);
+    
+        // Bảng danh sách sách mượn
+        doc.setFontSize(16);
+        doc.setTextColor(0, 102, 204);  // Màu xanh cho tiêu đề
+        doc.text('Danh sách sách mượn', 20, 80);  // Vị trí tiêu đề
+        autoTable(doc, {
+            startY: 85,
+            head: [['STT', 'Mã sách']],
+            body: tableData,
+            styles: {
+                font: "Roboto",
+                fontSize: 12,
+                cellPadding: 5,
+                valign: 'middle',
+                halign: 'center',
+            },
+            headStyles: {
+                fillColor: [0, 102, 204],  // Màu nền tiêu đề bảng
+                textColor: 255,  // Màu chữ tiêu đề bảng
+                fontStyle: 'bold',
+            },
+            alternateRowStyles: {
+                fillColor: [240, 240, 240]  // Màu nền các dòng chẵn
+            },
+            columnStyles: {
+                0: { cellWidth: 20 },
+                1: { cellWidth: 160 }
+            },
+        });
+    
+        // Thêm footer
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        const footerText = 'Thư viện BokStory - www.bookstory.edu.vn';
+        const footerWidth = doc.getTextWidth(footerText); // Lấy chiều rộng của footer text
+        const footerX = (doc.internal.pageSize.width - footerWidth) / 2; // Căn giữa footer
+        doc.text(footerText, footerX, 160);  // Vị trí footer căn giữa dưới cùng
+    
+        // Lưu PDF với tên có mã thẻ
         doc.save(`don_muon_${formData.lbCode}.pdf`);
     };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (!formData.lbCode || formData.bookCodes.length === 0) {
             setErrorMessage("Vui lòng nhập mã thẻ và ít nhất một mã sách.");
             return;
         }
-
-        console.log("Dữ liệu đơn mượn:", formData);
-        alert("Đơn mượn sách đã được gửi!");
-
-        await CreateLoanApi(formData.lbCode, formData.bookCodes, 1, null, formData.borrowType, 0); 
-        
-        handleExportPDF(); // Xuất PDF sau khi tạo đơn mượn
-        
-        navigate("/admin/order-management");
-        setErrorMessage('');
-    };
+    
+        try {
+            const result = await CreateLoanApi(
+                formData.lbCode,
+                formData.bookCodes,
+                1,
+                null,
+                formData.borrowType,
+                0
+            );
+    
+            if (result.errCode === 0 && result.loan) {
+                const { LoanCode, LoanID } = result.loan;
+    
+                setFormData(prev => ({
+                    ...prev,
+                    loanCode: LoanCode || `LOAN-${LoanID}`
+                }));
+                
+                const newLoanCode = LoanCode || `LOAN-${LoanID}`;
+                
+                setTimeout(() => {
+                    handleExportPDF(newLoanCode);
+                    navigate("/admin/order-management");
+                }, 200);                
+            } else {
+                setErrorMessage(result.message || "Lỗi tạo đơn mượn");
+            }
+        } catch (error) {
+            console.error("Lỗi khi tạo đơn:", error);
+            setErrorMessage("Lỗi hệ thống khi tạo đơn mượn.");
+        }
+    };    
 
     return (
         <div className="book-loan-form-container">

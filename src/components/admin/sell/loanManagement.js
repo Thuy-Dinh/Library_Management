@@ -143,11 +143,12 @@ export default function LoanManagement() {
                 <table className="product-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Mã đơn</th>
                             <th>Người mượn</th>
                             <th>Sách</th>
                             <th>Ngày mượn</th>
                             <th>Hạn trả</th>
+                            <th>Hình thức</th>
                             <th>Trạng thái</th>
                             <th>Duyệt</th>
                         </tr>
@@ -163,7 +164,7 @@ export default function LoanManagement() {
                             const isRefuse = item.State === "Đã từ chối";
                             return (
                                 <tr key={item.LoanID}>
-                                    <td>{autoIncrementID}</td>
+                                    <td>{item.LoanCode}</td>
                                     <td>{user.Name}</td>
                                     <td>
                                         {Array.isArray(books[item.BookID]) 
@@ -180,6 +181,7 @@ export default function LoanManagement() {
                                             .tz("Asia/Ho_Chi_Minh")
                                             .format("DD/MM/YYYY")}
                                     </td>
+                                    <td>{item.Method}</td>
                                     <td style={{color: 'red'}}>{item.State}</td>
                                     <td>
                                         <div className="product-btn">

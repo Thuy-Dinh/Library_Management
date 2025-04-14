@@ -1,15 +1,12 @@
 import axios from 'axios';
 
 async function CreateLoanApi(code, bookID, countDay, note, method, payment) {
-    console.log(code);
     // Prepare the data to be sent in the request
     const formData = new FormData();
     formData.append('code', code);
     formData.append('bookID', bookID);
     formData.append('countDay', countDay);
     formData.append('note', note);
-
-    console.log(code, bookID, countDay, note, method, payment);
 
     try {
         // Make the POST request to the server API
@@ -64,8 +61,22 @@ async function acceptLoanApi(loanID, state) {
     }
 }
 
+async function getALoanApi(id) {
+    try {
+        const response = await axios.get(`http://localhost:3050/loan/loan-detail=${id}`);
+        return response.data; 
+    } catch (error) {
+        console.error(
+            'Error fetching loan data:',
+            error.response ? error.response.data : error.message
+        );
+        throw error; // Ném lỗi để xử lý ở nơi gọi hàm
+    }
+}
+
 export { 
     CreateLoanApi, 
     getAllLoanApi,
-    acceptLoanApi 
+    acceptLoanApi,
+    getALoanApi
 };  
