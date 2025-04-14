@@ -176,6 +176,17 @@ async function SearchResultApi(keyword) {
     }
 }  
 
+async function SearchByOtherField(params) {
+    try {
+        const response = await axios.get(`http://localhost:3050/book/search?${params}`);
+    
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching books:", error.response?.data || error.message);
+        throw error;
+    }
+}  
+
 export { 
     FavoriteApi, 
     LastestBookApi, 
@@ -189,5 +200,6 @@ export {
     CreateTopicApi,
     SearchByCategoryApi,
     searchSuggestionApi,
-    SearchResultApi
+    SearchResultApi,
+    SearchByOtherField
 };  

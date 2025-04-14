@@ -1,0 +1,114 @@
+.search-body {
+    margin: 100px auto;
+    display: flex;
+}
+
+.search-form {
+    width: 1024px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    max-height: 385px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+  
+.search-form .search-header {
+    background-color: #a5212b;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    font-size: 18px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+  
+.search-form .form-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: nowrap;
+}
+
+.search-form .form-row label {
+    font-weight: bold;
+    width: 300px;
+}
+  
+.search-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 10px;
+    margin-bottom: 15px;
+}
+  
+.form-grid .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-grid .form-group label {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+  
+.radio-group label {
+    margin-right: 15px;
+}
+  
+input[type="text"],
+  select {
+    padding: 6px 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+}
+  
+.search-form button.btn-child {
+    background-color: #a5212b;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    flex: 1;
+}
+  
+.search-form button.btn-child:hover {
+    background-color: #8b1b24;
+}
+  
+.form-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.search-right {
+    margin: 0 auto;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    max-height: 1130px;
+}
+
+.other-text {
+    font-size: 16px;
+    color: #fff;
+    background-color: #8b1b24;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 5px;
+}
+  
+.search-left {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}

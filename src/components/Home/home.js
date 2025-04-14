@@ -18,6 +18,7 @@ import LoanManagement from "../admin/sell/loanManagement";
 import ProductCreate from "../admin/bookManagament/productCreate";
 import SearchByCategory from "../searchByCategory/mainPage";
 import SearchResult from "../Search/searchResult";
+import SearchPage from "../Search/searchPage";
 import LibraryCard from "../LibraryCard/libraryCard";
 import LoanCreate from "../admin/sell/loanCreate";
 
@@ -135,6 +136,17 @@ export default function Home() {
                             />
                         }
                     />
+
+                    <Route
+                        path="/searchPage"
+                        element={
+                            <SearchPage
+                                isAuthenticated={isAuthenticated}
+                                setIsAuthenticated={handleAuthentication}
+                            />
+                        }
+                    />
+
                     <Route
                         path="/user-inform"
                         element={

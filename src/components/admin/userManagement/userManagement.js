@@ -1,15 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faPenToSquare, faUserSlash, faUserCheck } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faUserSlash, faUserCheck } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import { GetAllUserApi, UpdateUserStateApi } from "../../../api/account"; // Thêm API cập nhật trạng thái
+import { GetAllUserApi, UpdateUserStateApi } from "../../../api/account";
 import "./userManagement.css";
 
 export default function UserManagement() {
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const recordsPerPage = 8;
-    const [searchInput, setSearchInput] = useState("");
+
+    const [searchFields, setSearchFields] = useState({
+        lbcode: "",
+        name: "",
+        email: "",
+        phone: "",
+        cccd: ""
+    });    
+
+    // Lọc theo trạng thái
+    const [searchStatus, setSearchStatus] = useState("Tất cả");
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,22 +40,29 @@ export default function UserManagement() {
         }
     };
 
-    const handleChange = (e) => {
-        setSearchInput(e.target.value);
+    const handleSearchChange = (field, value) => {
+        setSearchFields((prev) => ({
+            ...prev,
+            [field]: value
+        }));
         setCurrentPage(1);
     };
 
     const filteredData = data?.filter((item) => {
+        const lbcode = item.LbCode?.toLowerCase() ?? "";
         const name = item.Name?.toLowerCase() ?? "";
         const email = item.Email?.toLowerCase() ?? "";
         const phone = item.Phone?.toLowerCase() ?? "";
         const cccd = item.CCCDNumber?.toLowerCase() ?? "";
-        
+        const status = item.State ?? "";
+
         return (
-            name.includes(searchInput.toLowerCase()) ||
-            email.includes(searchInput.toLowerCase()) ||
-            phone.includes(searchInput.toLowerCase()) ||
-            cccd.includes(searchInput.toLowerCase()) 
+            lbcode.includes(searchFields.lbcode.toLowerCase()) &&
+            name.includes(searchFields.name.toLowerCase()) &&
+            email.includes(searchFields.email.toLowerCase()) &&
+            phone.includes(searchFields.phone.toLowerCase()) &&
+            cccd.includes(searchFields.cccd.toLowerCase()) &&
+            (searchStatus === "Tất cả" || status === searchStatus)
         );
     }) || [];
 
@@ -71,10 +89,8 @@ export default function UserManagement() {
 
     const handleUpdateState = async (id, newState) => {
         try {
-            console.log(id);
-            console.log(newState);
             await UpdateUserStateApi(id, newState);
-            fetchData(); // Reload danh sách sau khi cập nhật trạng thái
+            fetchData();
         } catch (error) {
             console.error("Lỗi khi cập nhật trạng thái:", error);
         }
@@ -84,14 +100,63 @@ export default function UserManagement() {
         <div className="user-container">
             <div className="user-header">
                 <h1>Quản lý tài khoản</h1>
-                <div className="user-search">
-                    <FontAwesomeIcon icon={faMagnifyingGlass} />
-                    <input
-                        name="search"
-                        placeholder="Nhập Tên/ Email/ Số điện thoại/ Số CCCD"
-                        value={searchInput}
-                        onChange={handleChange}
-                    />
+                <div className="user-search-group">
+                    <div className="user-search">
+                        <FontAwesomeIcon icon={faMagnifyingGlass} />
+                        <input
+                            placeholder="Tìm theo tên"
+                            value={searchFields.name}
+                            onChange={(e) => handleSearchChange("name", e.target.value)}
+                        />
+                    </div>
+                    <div className="user-search">
+                        <FontAwesomeIcon icon={faMagnifyingGlass} />
+                        <input
+                            placeholder="Tìm theo email"
+                            value={searchFields.email}
+                            onChange={(e) => handleSearchChange("email", e.target.value)}
+                        />
+                    </div>
+                    <div className="user-search">
+                        <FontAwesomeIcon icon={faMagnifyingGlass} />
+                        <input
+                            placeholder="Tìm theo số điện thoại"
+                            value={searchFields.phone}
+                            onChange={(e) => handleSearchChange("phone", e.target.value)}
+                        />
+                    </div>
+                    <div className="user-search">
+                        <FontAwesomeIcon icon={faMagnifyingGlass} />
+                        <input
+                            placeholder="Tìm theo CCCD"
+                            value={searchFields.cccd}
+                            onChange={(e) => handleSearchChange("cccd", e.target.value)}
+                        />
+                    </div>
+
+                    <div className="user-search">
+                        <FontAwesomeIcon icon={faMagnifyingGlass} />
+                        <input
+                            placeholder="Tìm theo mã thẻ"
+                            value={searchFields.lbcode}
+                            onChange={(e) => handleSearchChange("lbcode", e.target.value)}
+                        />
+                    </div>
+
+                    <div className="user-search">
+                        <select
+                            value={searchStatus}
+                            onChange={(e) => {
+                                setSearchStatus(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                        >
+                            <option value="Tất cả">Tất cả trạng thái</option>
+                            <option value="Active">Hoạt động</option>
+                            <option value="Limited">Hạn chế</option>
+                            <option value="UnActive">Bị khóa</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -124,9 +189,6 @@ export default function UserManagement() {
                             <td>{item.State}</td>
                             <td>
                                 <div className="user-btn">
-                                    {/* <button className="btn-edit" onClick={() => handleEdit(item)}>
-                                        <FontAwesomeIcon icon={faPenToSquare} />
-                                    </button> */}
                                     {item.State !== "Limited" && (
                                         <button className="btn-limit" onClick={() => handleUpdateState(item._id, "limited")}>
                                             <FontAwesomeIcon icon={faUserSlash} /> Hạn chế
@@ -150,13 +212,9 @@ export default function UserManagement() {
             </table>
 
             <div className="pagination">
-                <button onClick={handlePrevPage} disabled={currentPage === 1}>
-                    Trước
-                </button>
+                <button onClick={handlePrevPage} disabled={currentPage === 1}>Trước</button>
                 <span>Trang {currentPage} trên {totalPages}</span>
-                <button onClick={handleNextPage} disabled={currentPage === totalPages}>
-                    Sau
-                </button>
+                <button onClick={handleNextPage} disabled={currentPage === totalPages}>Sau</button>
             </div>
         </div>
     );

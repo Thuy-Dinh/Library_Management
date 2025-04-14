@@ -28,26 +28,33 @@
 .user-header h1 {
     font-size: 24px;
     color: #333;
+    margin-right: 30px;
+}
+
+.user-search-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+    align-items: center;
 }
 
 .user-search {
-    width: 50%;
-    height: 90%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    width: 30%;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px;
-    font-size: 14px;
-    color: #ccc;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 4px 8px;
+    background-color: #fff;
 }
 
-.user-search input {
-    width: 100%;
-    outline: none;
+.user-search input, .user-search select {
     border: none;
-    line-height: 20px;
+    outline: none;
+    margin-left: 6px;
+    padding: 4px;
+    font-size: 14px;
 }
 
 .user-header .btn-add {
@@ -148,4 +155,5 @@
     margin: 0 10px;
     font-size: 14px;
 }
+
 
