@@ -2,3 +2,26 @@ button:disabled {
     background-color: #ccc;
     cursor: not-allowed; /* Thêm con trỏ "không được phép" */
 }
+
+.search-filters {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.search-filters label {
+    min-width: 49%;
+}
+
+.search-filters h4 {
+    margin-bottom: 3px;
+}
+
+.search-filters input,
+.search-filters select {
+    padding: 6px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+}

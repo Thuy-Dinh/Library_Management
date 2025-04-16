@@ -57,7 +57,7 @@
     margin-right: 15px;
 }
   
-input[type="text"],
+.search-body input[type="text"],
   select {
     padding: 6px 8px;
     font-size: 14px;

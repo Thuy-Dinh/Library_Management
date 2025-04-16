@@ -63,14 +63,14 @@ async function acceptLoanApi(loanID, state) {
 
 async function getALoanApi(id) {
     try {
-        const response = await axios.get(`http://localhost:3050/loan/loan-detail=${id}`);
+        const response = await axios.get(`http://localhost:3050/loan/loan-detail/${id}`);
         return response.data; 
     } catch (error) {
         console.error(
             'Error fetching loan data:',
             error.response ? error.response.data : error.message
         );
-        throw error; // Ném lỗi để xử lý ở nơi gọi hàm
+        throw error;
     }
 }
 

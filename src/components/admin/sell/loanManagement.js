@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faCirclePlus, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
-// import { faMagnifyingGlass, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCirclePlus, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { GetAUserApi } from "../../../api/account";
 import { BookDetailApi } from "../../../api/book";
 import { getAllLoanApi, acceptLoanApi } from "../../../api/loan";
@@ -11,13 +11,18 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 
-
 export default function LoanManagement() {
     const [data, setData] = useState([]);
     const [users, setUsers] = useState({}); 
     const [books, setBooks] = useState({}); 
     const [currentPage, setCurrentPage] = useState(1);
     const recordsPerPage = 5;
+
+    const [searchCode, setSearchCode] = useState("");
+    const [searchName, setSearchName] = useState("");
+    const [searchBook, setSearchBook] = useState("");
+    const [searchState, setSearchState] = useState("");
+
     dayjs.extend(utc);
     dayjs.extend(timezone);
 
@@ -65,6 +70,12 @@ export default function LoanManagement() {
         fetchData();
     }, []); 
 
+    const navigate = useNavigate();
+
+    const handleClickLoanCode = async (loanID) => {
+        navigate(`/admin/order-management/order-detail/${loanID}`);
+    };
+
     const handleAccept = async (loanID, state) => {
         try {
             // Gọi API duyệt yêu cầu mượn
@@ -83,20 +94,17 @@ export default function LoanManagement() {
         }
     };       
 
-    const [searchInput, setSearchInput] = useState("");
-
-    const handleChange = (e) => {
-        setSearchInput(e.target.value);
-        setCurrentPage(1); 
-    };
-
     const filteredData = data?.filter((item) => {
+        const loanCode = item.LoanCode?.toLowerCase() ?? "";
         const userName = users[item.AccountID]?.Name?.toLowerCase() ?? "";
         const title = books[item.BookID]?.Title?.toLowerCase() ?? "";
+        const state = item.State.toLowerCase() ?? "";
         
         return (
-            title.includes(searchInput.toLowerCase()) ||
-            userName.includes(searchInput.toLowerCase())
+            loanCode.includes(searchCode.toLowerCase()) &&
+            userName.includes(searchName.toLowerCase()) &&
+            title.includes(searchBook.toLowerCase()) &&
+            state.includes(searchState.toLowerCase())
         );
     }) || [];    
 
@@ -122,22 +130,50 @@ export default function LoanManagement() {
         <div className="product-container">
             <div className="product-body">
                 <div className="product-header">
-                    <h1>Danh sách đơn mượn sách</h1>
-                    <div className="product-content">
-                        <div className="product-search">
-                            <FontAwesomeIcon icon={faMagnifyingGlass} />
+                    <h1 style={{marginBottom: 8}}>Danh sách đơn mượn sách</h1>
+                    <Link to="/admin/order-management/order-create" className="btn-add">
+                        <FontAwesomeIcon icon={faCirclePlus} />
+                        <span>Tạo đơn</span>
+                    </Link>
+                    <div className="search-filters">
+                        <label>
+                            <h4>Mã đơn</h4>
                             <input
-                                name="search"
-                                placeholder="Tìm kiếm đơn theo tên người dùng hoặc sách..."
-                                value={searchInput}
-                                onChange={handleChange}
+                                type="text"
+                                placeholder="Nhập mã đơn"
+                                value={searchCode}
+                                onChange={(e) => setSearchCode(e.target.value)}
                             />
-                        </div>
-                        <Link to="/admin/order-management/order-create" className="btn-add">
-                            <FontAwesomeIcon icon={faCirclePlus} />
-                            <span>Tạo đơn</span>
-                        </Link>
-                    </div>   
+                        </label>
+                        <label>
+                            <h4>Người mượn</h4>
+                            <input
+                                type="text"
+                                placeholder="Tên người mượn"
+                                value={searchName}
+                                onChange={(e) => setSearchName(e.target.value)}
+                            />
+                        </label>
+                        <label>
+                            <h4>Tên sách</h4>
+                            <input
+                                type="text"
+                                placeholder="Tên sách"
+                                value={searchBook}
+                                onChange={(e) => setSearchBook(e.target.value)}
+                            />
+                        </label>
+                        <label>
+                            <h4>Trạng thái</h4>
+                            <select value={searchState} onChange={(e) => setSearchState(e.target.value)}>
+                                <option value="">-- Tất cả --</option>
+                                <option value="Từ chối">Từ chối</option>
+                                <option value="Đang mượn">Đang mượn</option>
+                                <option value="Đã trả">Đã trả</option>
+                                <option value="Quá hạn">Quá hạn</option>
+                            </select>
+                        </label>
+                    </div>
                 </div>
                 
                 <table className="product-table">
@@ -150,6 +186,7 @@ export default function LoanManagement() {
                             <th>Hạn trả</th>
                             <th>Hình thức</th>
                             <th>Trạng thái</th>
+                            <th>Ghi chú</th>
                             <th>Duyệt</th>
                         </tr>
                     </thead>
@@ -164,7 +201,14 @@ export default function LoanManagement() {
                             const isRefuse = item.State === "Đã từ chối";
                             return (
                                 <tr key={item.LoanID}>
-                                    <td>{item.LoanCode}</td>
+                                    <td>
+                                        <span
+                                            onClick={() => handleClickLoanCode(item._id)}
+                                            style={{ color: "#007bff", cursor: "pointer", textDecoration: "underline" }}
+                                        >
+                                            {item.LoanCode}
+                                        </span>
+                                    </td>
                                     <td>{user.Name}</td>
                                     <td>
                                         {Array.isArray(books[item.BookID]) 
@@ -183,6 +227,7 @@ export default function LoanManagement() {
                                     </td>
                                     <td>{item.Method}</td>
                                     <td style={{color: 'red'}}>{item.State}</td>
+                                    <td>{item.Note === "" ? "Không có" : item.Note}</td>
                                     <td>
                                         <div className="product-btn">
                                             <button 

@@ -21,6 +21,9 @@ import SearchResult from "../Search/searchResult";
 import SearchPage from "../Search/searchPage";
 import LibraryCard from "../LibraryCard/libraryCard";
 import LoanCreate from "../admin/sell/loanCreate";
+import OrderDetail from "../admin/sell/loanDetail";
+import GuidePage from "../guidePage/guidePage";
+import ContactPage from "../contactPage/contactPage";
 
 // Component bảo vệ Route
 function ProtectedRoute({ isAuthenticated, children }) {
@@ -117,6 +120,7 @@ export default function Home() {
                         <Route path="product-management/edit" element={<ProductEdit />} />
                         <Route path="product-management/detail" element={<ProductDetail />} />
                         <Route path="order-management/order-create" element={<LoanCreate />} />
+                        <Route path="order-management/order-detail/:id" element={<OrderDetail />} />
                     </Route>
                     <Route
                         path="/search"
@@ -141,6 +145,26 @@ export default function Home() {
                         path="/searchPage"
                         element={
                             <SearchPage
+                                isAuthenticated={isAuthenticated}
+                                setIsAuthenticated={handleAuthentication}
+                            />
+                        }
+                    />
+
+                    <Route
+                        path="/guide"
+                        element={
+                            <GuidePage
+                                isAuthenticated={isAuthenticated}
+                                setIsAuthenticated={handleAuthentication}
+                            />
+                        }
+                    />
+
+                    <Route
+                        path="/contact"
+                        element={
+                            <ContactPage
                                 isAuthenticated={isAuthenticated}
                                 setIsAuthenticated={handleAuthentication}
                             />

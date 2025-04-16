@@ -4,7 +4,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'; // thêm dòng này
 import { font } from '../../../font/Roboto-Regular-normal';
 import './loanCreate.css'; 
-import { CreateLoanApi, getALoanApi } from '../../../api/loan';
+import { CreateLoanApi } from '../../../api/loan';
 
 function LoanCreate() {
     const navigate = useNavigate();

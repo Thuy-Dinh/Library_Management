@@ -1,173 +1,79 @@
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
-
-.order-status {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin: 15px 20px 10px;
-    padding: 10px;
-}
-
-.order-header {
-    text-align: left;
-}
-
-.steps {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 35px;
-    padding: 20px;
-}
-
-.step-completed {
-    text-align: center;
-    position: relative;
-}
-
-.icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
+.bill-container {
+    max-width: 900px;
     margin: 0 auto;
+    padding: 0 30px 30px 30px;
+    font-family: 'Segoe UI', sans-serif;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-.arrow {
-    position: relative;
+.bill-container .logo {
+    width: 100px;
+    height: auto;
+}
+
+.bill-header {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
 }
 
-.line {
-    width: 3px;
-    height: 20px;
+.bill-code {
+    font-weight: bold;
+    font-size: 22px;
 }
 
-.dot {
-    width: 8px;
-    height: 8px;
-    background-color: white;
-    border-radius: 50%;
-    position: absolute;
-    top: 72%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.store-info h2 {
+    margin: 0;
+    font-size: 24px;
+    text-transform: uppercase;
 }
 
-.arrow-content {
-    width: 120px;
-    height: 22px;
-    margin-left: -10%;
+.customer-info {
+    margin-bottom: 20px;
+    font-size: 16px;
+    line-height: 1.6;
+    text-align: center;
 }
 
-.play-left,
-.play-right {
-    position: absolute;
-    height: 22px;
+.user-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 15px;
 }
 
-.play-left {
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 15px solid white; 
-    left: -6%;
-}
-
-.play-right {
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 15px solid; 
-    right: -7%;
-}
-
-
-.loan-title {
-    white-space: nowrap;
-}
-
-.label {
-    font-size: 14px;
-}
-
-.actions {
+.user-info-table th,
+.user-info-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
     text-align: left;
-    margin-bottom: 15px;
-    display: flex;
-    gap: 10px;
 }
 
-.loan-item {
-    border-top: 1px solid #ccc;
-    padding-top: 20px;
+.user-info-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.bill-container .book-table {
+    width: 100%;
+    border-collapse: collapse;
     margin-bottom: 20px;
 }
 
-.loan-text {
+.bill-container .book-table th, .book-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
     text-align: left;
-    color: #C00000;
-    margin-bottom: 6px;
 }
 
-.loan-content {
-    display: flex;
-    gap: 20px;
+.bill-container .book-table th {
+    background-color: #f2f2f2;
 }
 
-.loan-col {
-    flex: 1;
+.bill-container .summary {
+    font-size: 16px;
+    line-height: 1.6;
     text-align: left;
-    display: flex;
-    justify-content: space-between;
-}
-
-.col-2 {
-    color: #C00000;
-    text-align: right;
-}
-
-.product-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #ddd;
-}
-
-.product-image img {
-    width: 100px;
-    height: 100px;
-}
-
-.product-details {
-    text-align: left;
-    width: 45%;
-}
-
-.product-details .product-name {
-    font-weight: bold;
-}
-
-.product-quantity input {
-    width: 40px;
-    text-align: center;
-}
-
-.product-total {
-    color: #C00000;
-    font-weight: bold;
-}
-
-.loan-btn {
-    padding: 10px 15px;
-    border: 1px solid transparent;
-    border-radius: 5px;
-    color: white;
 }

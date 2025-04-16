@@ -45,9 +45,9 @@ function Navbar({ isAuthenticated, userName, setIsAuthenticated }) {
             <ul className="navbar-content">
                 <Link to="/">Trang chủ</Link>
                 <Link to="/searchPage">Tra cứu nâng cao</Link>
-                <li>Hướng dẫn mượn trả</li>
+                <Link to="/guide">Hướng dẫn mượn trả</Link>
                 {/* <li>Thể loại</li> */}
-                <li>Liên hệ</li>
+                <Link to="/contact">Liên hệ</Link>
             </ul>
             <div>
                 {isAuthenticated ? (
