@@ -1,0 +1,42 @@
+.edit-loan-container {
+    min-width: 700px;
+    margin: auto;
+    padding: 24px;
+    background: #f9f9f9;
+    border-radius: 12px;
+}
+
+.edit-loan-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-loan-form label {
+    margin-bottom: 16px;
+    font-weight: bold;
+}
+
+.edit-loan-form input,
+.edit-loan-form select,
+.edit-loan-form textarea {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.edit-loan-form button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.edit-loan-form button:hover {
+    background-color: #218838;
+}

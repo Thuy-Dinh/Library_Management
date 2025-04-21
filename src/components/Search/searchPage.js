@@ -114,7 +114,7 @@ export default function SearchPage() {
 
   return (
     <>
-        <Navbar/>
+        <Navbar  isAuthenticated={isAuthenticated} userName={userName} setIsAuthenticated={setIsAuthenticated}/>
         <div className="search-body">
             <div className="search-left">
                 <form className="search-form" onSubmit={handleSubmit}>
@@ -182,7 +182,7 @@ export default function SearchPage() {
                     </div>
                 </form>
 
-                <div className="search-result">
+                <div className="search-result-2">
                     <h2>Kết quả tìm kiếm</h2>
                     {searchResults.length > 0 ? (
                     <>

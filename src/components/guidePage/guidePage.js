@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './guidePage.css';
 import Navbar from '../HomePage/navbar';
 
@@ -57,9 +57,23 @@ const steps = [
 ];
 
 function GuidePage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userName, setUserName] = useState('');
+  
+  useEffect(() => {
+    const storedName = localStorage.getItem('userName');
+    const storedToken = localStorage.getItem('userToken');
+    if (storedName && storedToken) {
+        setIsAuthenticated(true);
+        setUserName(storedName);
+    } else {
+        setIsAuthenticated(false);
+    }
+  }, []);
+
   return (
     <>
-      <Navbar />
+      <Navbar isAuthenticated={isAuthenticated} userName={userName} setIsAuthenticated={setIsAuthenticated}/>
       <div className="guide-container">
         <h1 className="guide-title">📚 Hướng Dẫn Tra Cứu – Mượn Trả Sách</h1>
         <div className="steps-container">

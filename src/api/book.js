@@ -127,6 +127,14 @@ async function GetAllTopicApi() {
     }
 }
 
+async function GetCategoryApi(id) {
+    const res = await axios.get(`http://localhost:3050/book/categories/${id}`);
+    if (!res.data.success) {
+      throw new Error(res.data.message || 'Lấy chuyên mục thất bại');
+    }
+    return res.data.data;
+};
+
 async function CreateTopicApi(topic) {
     try {
         const response = await axios.post('http://localhost:3050/book/create-topic', {
@@ -155,7 +163,6 @@ async function SearchByCategoryApi(topics) {
 
 async function searchSuggestionApi(keyword) {
     try {
-        console.log(keyword);
         const response = await axios.get(`http://localhost:3050/book/search-suggestions?keyword=${keyword}`);
     
         return response.data;
@@ -197,6 +204,7 @@ export {
     UpdateBookApi,
     DeleteBookApi,
     GetAllTopicApi,
+    GetCategoryApi,
     CreateTopicApi,
     SearchByCategoryApi,
     searchSuggestionApi,

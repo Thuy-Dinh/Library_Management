@@ -14,7 +14,7 @@
 
 .overview-content {
     display: flex;
-    gap: 10px;
+    gap: 20px;
 }
 
 .stats-container {
@@ -26,7 +26,7 @@
 .stat-card {
     background-color: white;
     padding: 20px;
-    width: 30%;
+    width: 24%;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -47,12 +47,12 @@
     flex-direction: column;
     align-items: center;
     margin-bottom: 20px;
-    width: 310px;
+    width: 50%;
     height: 330px;
 }
 
 .top-products {
-    width: 60%;
+    width: 40%;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;

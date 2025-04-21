@@ -20,14 +20,13 @@ function BookDescription({ isAuthenticated }) {
         const fetchBookDetail = async () => {
             try {
                 const response = await BookDetailApi(bookId); 
-                console.log(response.bookDetail);
                 if (response) {
                     setBookDetail(response.bookDetail);  
                 } else {
                     setError('Dữ liệu không hợp lệ');
                 }
             } catch (error) {
-                setError('Không thể tải sách yêu thích');
+                setError('Không thể tải sách cùng thể loại');
                 console.error(error);
             } finally {
                 setLoading(false);

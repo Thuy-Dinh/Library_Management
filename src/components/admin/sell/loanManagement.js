@@ -11,6 +11,9 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 export default function LoanManagement() {
     const [data, setData] = useState([]);
     const [users, setUsers] = useState({}); 
@@ -23,8 +26,22 @@ export default function LoanManagement() {
     const [searchBook, setSearchBook] = useState("");
     const [searchState, setSearchState] = useState("");
 
-    dayjs.extend(utc);
-    dayjs.extend(timezone);
+    const isDueSoon = (item) => {
+        const now = dayjs().tz("Asia/Ho_Chi_Minh").startOf('day');
+        const dueDate = dayjs(item.DayEnd, "DD/MM/YYYY").tz("Asia/Ho_Chi_Minh").startOf('day');
+        return dueDate.diff(now, 'day') === 1 && item.State === "Đang mượn";
+    };
+
+    const getStateColor = (state) => {
+        switch (state) {
+            case "Đã trả": return "green";
+            case "Đang mượn": return "blue";
+            case "Từ chối":
+            case "Đã từ chối": return "gray";
+            case "Quá hạn": return "darkred";
+            default: return "black";
+        }
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -167,6 +184,7 @@ export default function LoanManagement() {
                             <h4>Trạng thái</h4>
                             <select value={searchState} onChange={(e) => setSearchState(e.target.value)}>
                                 <option value="">-- Tất cả --</option>
+                                <option value="Yêu cầu mượn">Yêu cầu mượn</option>
                                 <option value="Từ chối">Từ chối</option>
                                 <option value="Đang mượn">Đang mượn</option>
                                 <option value="Đã trả">Đã trả</option>
@@ -186,7 +204,7 @@ export default function LoanManagement() {
                             <th>Hạn trả</th>
                             <th>Hình thức</th>
                             <th>Trạng thái</th>
-                            <th>Ghi chú</th>
+                            {/* <th>Ghi chú</th> */}
                             <th>Duyệt</th>
                         </tr>
                     </thead>
@@ -199,8 +217,12 @@ export default function LoanManagement() {
                             const isLoaning = item.State === "Đang mượn";
                             const isReturned = item.State === "Đã trả";
                             const isRefuse = item.State === "Đã từ chối";
+                            const isOverdue = item.State === "Quá hạn";
                             return (
-                                <tr key={item.LoanID}>
+                                <tr 
+                                    key={item.LoanID}
+                                    className={isDueSoon(item) ? 'row-due-soon' : ''}
+                                >
                                     <td>
                                         <span
                                             onClick={() => handleClickLoanCode(item._id)}
@@ -216,31 +238,27 @@ export default function LoanManagement() {
                                             : books[item.BookID]?.Title}
                                     </td>
                                     <td>
-                                        {dayjs(item.DayStart, "DD/MM/YYYY")
-                                            .tz("Asia/Ho_Chi_Minh")
-                                            .format("DD/MM/YYYY")}
-                                        </td>
-                                        <td>
-                                        {dayjs(item.DayEnd, "DD/MM/YYYY")
-                                            .tz("Asia/Ho_Chi_Minh")
-                                            .format("DD/MM/YYYY")}
+                                        {dayjs(item.DayStart).format("DD/MM/YYYY")}
+                                    </td>
+                                    <td>
+                                        {dayjs(item.DayEnd).format("DD/MM/YYYY")}
                                     </td>
                                     <td>{item.Method}</td>
-                                    <td style={{color: 'red'}}>{item.State}</td>
-                                    <td>{item.Note === "" ? "Không có" : item.Note}</td>
+                                    <td style={{ color: getStateColor(item.State), fontWeight: 'bold' }}>{item.State}</td>
+                                    {/* <td>{item.Note === "" ? "Không có" : item.Note}</td> */}
                                     <td>
                                         <div className="product-btn">
                                             <button 
                                                 className="btn-edit" 
                                                 onClick={() => handleAccept(item._id, item.State)}
-                                                disabled={isReturned || isRefuse}
+                                                disabled={isReturned || isRefuse || isOverdue}
                                             >
                                                 <FontAwesomeIcon icon={faCheck} />
                                             </button>
                                             <button 
                                                 className="btn-delete"
                                                 onClick={() => handleAccept(item._id, "Từ chối")}
-                                                disabled={isLoaning || isReturned || isRefuse}
+                                                disabled={isLoaning || isReturned || isRefuse || isOverdue}
                                             >
                                                 <FontAwesomeIcon icon={faXmark} />
                                             </button>

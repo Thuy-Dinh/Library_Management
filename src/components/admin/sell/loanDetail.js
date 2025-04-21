@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { GetAUserApi } from "../../../api/account";
 import { BookDetailApi } from "../../../api/book";
 import { getALoanApi } from "../../../api/loan";
+import { useNavigate } from "react-router-dom";
 import "./loanDetail.css";
 
 export default function OrderDetail() {
@@ -10,6 +11,7 @@ export default function OrderDetail() {
     const [loan, setLoan] = useState(null);
     const [user, setUser] = useState(null);
     const [books, setBooks] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchLoan = async () => {
@@ -97,6 +99,14 @@ export default function OrderDetail() {
                 <p><strong>Cọc:</strong> {loan.Payment}</p>
                 <p><strong>Trạng thái đơn hàng:</strong> {loan.State}</p>
                 <p><strong>Ghi chú:</strong> {loan.Note || "Không có ghi chú."}</p>
+            </div>
+            <div className="edit-button-wrapper">
+                <button
+                    className="edit-button"
+                    onClick={() => navigate(`/admin/order-management/loan-edit/${loan._id}`)}
+                >
+                    ✏️ Chỉnh sửa
+                </button>
             </div>
         </div>
     );

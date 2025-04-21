@@ -1,45 +1,152 @@
+/* Toàn bộ trang */
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
 
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+}
+
+.homepage-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Sidebar */
 .search-container {
     display: flex;
-    gap: 55px;
-}
-
-.main-content {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.btn-borrow-2 {
-    width: 90%;
-    outline: none;
-    background-color: #a7ccee;
-    padding: 5px 15px;
-    margin: 8px auto 0;
-    border: 1px solid #a7ccee;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.btn-borrow-2:hover {
-    transform: scale(1.1);
+    gap: 35px;
+    padding: 20px;
+    margin-top: 60px;
 }
 
 .sidebar-1 {
-    text-align: left;
+    width: 25%;
     padding: 20px 35px;
-    gap: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.sidebar-1 h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
 }
 
 .topic-checkbox {
     display: flex;
     gap: 10px;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    align-items: center;
 }
+
+.topic-checkbox input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.topic-checkbox label {
+    font-size: 1rem;
+    color: #555;
+    cursor: pointer;
+}
+
+.topic-checkbox input:checked + label {
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* Thay .book-item width: calc(33.33% - 20px); bằng flex basis */
+.main-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; /* hoặc space-between tuỳ ý */
+}
+
+.book-item-category {
+/* flex: grow shrink basis */
+    flex: 0 1 200px;      /* mỗi card tối đa 300px, có thể co lại nếu cần */
+    max-width: 200px;     /* không cho rộng quá 300px */
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 15px;
+    transition: transform 0.3s;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.4s ease forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.book-item-category:hover {
+    transform: translateY(-5px);
+}
+
+/* Ảnh bìa */
+.book-item-category img {
+    width: 100%;          /* chiếm hết chiều ngang card */
+    height: 200px;        /* cố định chiều cao */
+    object-fit: cover;    /* cắt vừa khung, không méo ảnh */
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* Tiêu đề & thông tin */
+.book-item-category strong {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #333;
+    text-align: center;
+}
+
+.book-item-category div {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+/* Nút Mượn */
+.book-item-category .btn-borrow-2 {
+    margin-top: auto;     /* đẩy nút xuống đáy card */
+    padding: 8px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.book-item-category .btn-borrow-2:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.book-item-category a {
+    text-decoration: none;   /* bỏ gạch chân */
+    color: inherit;          /* kế thừa màu chữ của phần tử cha, không bị đổi màu mặc định */
+}
+
+.book-item-category a:hover,
+.book-item-category a:focus {
+    text-decoration: none;
+}
+  
+  

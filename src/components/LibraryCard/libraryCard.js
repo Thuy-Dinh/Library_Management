@@ -59,9 +59,14 @@ function LibraryCard() {
                     <div><strong>Tuổi:</strong> {data.Age}</div>
                     <div><strong>Giới tính:</strong> {data.Gender}</div>
                 </div>
+                <div className="edit-button-container">
+                    <button className="edit-button" onClick={() => window.location.href = '/edit-profile'}>
+                        ✏️ Chỉnh sửa thông tin
+                    </button>
+                </div>
             </div>
         </>
-    );
+    );    
 }
 
 export default LibraryCard;

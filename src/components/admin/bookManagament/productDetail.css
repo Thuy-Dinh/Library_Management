@@ -1,0 +1,129 @@
+.back-text {
+    text-align: left;
+    font-size: 24px;
+    color: inherit;   
+}
+
+/* --- Container tổng --- */
+.book-description-admin {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  }
+  
+  /* --- Link Quay lại --- */
+  .book-description-admin > a {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #007bff;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .book-description-admin > a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }
+  
+  /* --- Tiêu đề phần --- */
+  .book-description-admin .detail-text {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+  }
+  
+  /* --- Layout chi tiết sách --- */
+  .book-description-admin .book-detail {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  
+  /* --- Ảnh bìa --- */
+  .book-description-admin .book-detail img {
+    flex-shrink: 0;
+    width: 300px;
+    height: 420px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  }
+  
+  /* --- Thông tin sách --- */
+  .book-description-admin .detail-item {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 30px;
+  }
+  
+  /* Trường Title chiếm 2 cột */
+  .book-description-admin .detail-item > div:first-child {
+    grid-column: span 2;
+    font-size: 24px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+  
+  /* Các dòng thông tin */
+  .book-description-admin .detail-item div:not(:first-child) {
+    background: #f9f9f9;
+    padding: 12px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #444;
+  }
+  
+  /* Biểu tượng đánh giá */
+  .book-description-admin .icon-star {
+    color: #f1c40f;
+    margin-left: 6px;
+  }
+
+  /* Màu sắc cho từng trạng thái */
+.status-available {
+  color: green !important;
+  font-weight: bold;
+}
+
+.status-unavailable {
+  color: red !important;
+  font-weight: bold;
+}
+
+.status-torned {
+  color: orange !important;
+  font-weight: bold;
+}
+
+.status-unknown {
+  color: gray !important;
+  font-weight: bold;
+}
+  
+  /* --- Responsive --- */
+  @media (max-width: 768px) {
+    .book-detail {
+      flex-direction: column;
+      align-items: center;
+    }
+    .book-detail img {
+      width: 100%;
+      max-width: 360px;
+      height: auto;
+    }
+    .detail-item {
+      grid-template-columns: 1fr;
+    }
+    .detail-item > div:first-child {
+      grid-column: span 1;
+      text-align: center;
+    }
+  }  

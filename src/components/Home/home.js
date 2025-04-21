@@ -24,6 +24,8 @@ import LoanCreate from "../admin/sell/loanCreate";
 import OrderDetail from "../admin/sell/loanDetail";
 import GuidePage from "../guidePage/guidePage";
 import ContactPage from "../contactPage/contactPage";
+import EditProfile from "../LibraryCard/editCard";
+import LoanEdit from "../admin/sell/LoanEdit";
 
 // Component bảo vệ Route
 function ProtectedRoute({ isAuthenticated, children }) {
@@ -120,6 +122,7 @@ export default function Home() {
                         <Route path="product-management/edit" element={<ProductEdit />} />
                         <Route path="product-management/detail" element={<ProductDetail />} />
                         <Route path="order-management/order-create" element={<LoanCreate />} />
+                        <Route path="order-management/loan-edit/:id" element={<LoanEdit />} />
                         <Route path="order-management/order-detail/:id" element={<OrderDetail />} />
                     </Route>
                     <Route
@@ -141,35 +144,11 @@ export default function Home() {
                         }
                     />
 
-                    <Route
-                        path="/searchPage"
-                        element={
-                            <SearchPage
-                                isAuthenticated={isAuthenticated}
-                                setIsAuthenticated={handleAuthentication}
-                            />
-                        }
-                    />
+                    <Route path="/searchPage" element={<SearchPage/>}/>
 
-                    <Route
-                        path="/guide"
-                        element={
-                            <GuidePage
-                                isAuthenticated={isAuthenticated}
-                                setIsAuthenticated={handleAuthentication}
-                            />
-                        }
-                    />
+                    <Route path="/guide" element={<GuidePage/>}/>
 
-                    <Route
-                        path="/contact"
-                        element={
-                            <ContactPage
-                                isAuthenticated={isAuthenticated}
-                                setIsAuthenticated={handleAuthentication}
-                            />
-                        }
-                    />
+                    <Route path="/contact" element={<ContactPage/>}/>
 
                     <Route
                         path="/user-inform"
@@ -180,6 +159,17 @@ export default function Home() {
                             />
                         }
                     />
+
+                    <Route
+                        path="/edit-profile"
+                        element={
+                            <EditProfile
+                                isAuthenticated={isAuthenticated}
+                                setIsAuthenticated={handleAuthentication}
+                            />
+                        }
+                    />
+
                 </Routes>
             </div>
         </Router>

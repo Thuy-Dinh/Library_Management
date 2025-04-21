@@ -1,11 +1,25 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Navbar from '../HomePage/navbar';
 import './contact.css';
 
 function ContactPage() {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [userName, setUserName] = useState('');
+
+    useEffect(() => {
+        const storedName = localStorage.getItem('userName');
+        const storedToken = localStorage.getItem('userToken');
+        if (storedName && storedToken) {
+            setIsAuthenticated(true);
+            setUserName(storedName);
+        } else {
+            setIsAuthenticated(false);
+        }
+    }, []);
+    
   return (
     <>
-        <Navbar/>
+        <Navbar isAuthenticated={isAuthenticated} userName={userName} setIsAuthenticated={setIsAuthenticated}/>
         <div className="contact-container">
         <h1 className="contact-title">📬 Liên Hệ Với Chúng Tôi</h1>
         <p className="contact-subtitle">

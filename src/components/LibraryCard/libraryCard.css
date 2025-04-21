@@ -1,6 +1,6 @@
 .library-card-container {
-    max-width: 500px;
-    margin: 100px auto;
+    max-width: 900px;
+    margin: 200px auto;
     padding: 20px;
     border-radius: 10px;
     background: #ffffff;
@@ -16,16 +16,18 @@
 }
 
 .library-card-info {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    font-size: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 cột bằng nhau */
+    gap: 15px 30px; /* hàng cách nhau 15px, cột cách nhau 30px */
+    width: 100%;
+    margin-top: 20px;
 }
 
 .library-card-info div {
     background: #f8f9fa;
-    padding: 10px;
+    padding: 12px 15px;
     border-radius: 5px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     text-align: left;
 }
 
@@ -36,4 +38,24 @@
 .library-card-container .error-message {
     color: red;
     font-weight: bold;
+}
+
+.library-card-container .edit-button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.library-card-container .edit-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.library-card-container .edit-button:hover {
+    background-color: #45a049;
 }

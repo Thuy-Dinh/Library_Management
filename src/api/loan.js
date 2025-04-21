@@ -74,9 +74,23 @@ async function getALoanApi(id) {
     }
 }
 
+async function updateLoanApi (id, data) {
+    try {
+        const response = await axios.post(`http://localhost:3050/loan/update-loan/${id}`, data);
+        return response.data; 
+    } catch (error) {
+        console.error(
+            'Error fetching loan data:',
+            error.response ? error.response.data : error.message
+        );
+        throw error;
+    }
+}
+
 export { 
     CreateLoanApi, 
     getAllLoanApi,
     acceptLoanApi,
-    getALoanApi
+    getALoanApi,
+    updateLoanApi
 };  

@@ -15,6 +15,8 @@ export default function SearchByCategory() {
   const [topics, setTopics] = useState([]); 
   const [books, setBooks] = useState([]); 
   const [selectedTopics, setSelectedTopics] = useState([]); 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -54,15 +56,18 @@ export default function SearchByCategory() {
     const fetchBooks = async () => {
       try {
         if (selectedTopics.length > 0) {
-          const response = await SearchByCategoryApi(selectedTopics); // Gửi danh sách chủ đề
+          const response = await SearchByCategoryApi(selectedTopics); 
           if (response.success && Array.isArray(response.data)) {
-            setBooks(response.data); 
+            setTimeout(() => {
+              setBooks(response.data); 
+              setCurrentPage(1); // reset về trang đầu khi chọn chủ đề mới
+            }, 100); // delay nhẹ để tránh giật UI
           } else {
             console.error("Failed to fetch books:", response.message);
             setBooks([]);
           }
         } else {
-          setBooks([]); // Nếu không có chủ đề nào được chọn, đặt về mảng rỗng
+          setBooks([]);
         }
       } catch (error) {
         console.error("Error fetching books:", error);
@@ -71,8 +76,8 @@ export default function SearchByCategory() {
     };
   
     fetchBooks();
-  }, [selectedTopics]);   
-
+  }, [selectedTopics]);
+  
   const handleTopicChange = (e) => {
     const topicName = e.target.value; 
     setSelectedTopics((prevState) =>
@@ -93,6 +98,15 @@ export default function SearchByCategory() {
     } else {
       alert("Sách không có sẵn!!!");
     }
+  };
+
+  const indexOfLastBook = currentPage * itemsPerPage;
+  const indexOfFirstBook = indexOfLastBook - itemsPerPage;
+  const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
+  const totalPages = Math.ceil(books.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -121,13 +135,15 @@ export default function SearchByCategory() {
         </div>
 
         <div>
-          <h2>Danh sách sách theo chủ đề</h2>
+          <h2 style={{ marginBottom: 20, textAlign: "center" }}>
+            Danh sách sách theo chủ đề
+          </h2>
           <div className="main-content">
             {Array.isArray(books) && books.length > 0 ? (
-              books.map((book) => (
-                <div className="book-item" key={book.BookID}>
+              currentBooks.map((book) => (
+                <div className="book-item-category" key={book.BookID}>
                   <Link to={`/detail-book?id=${book._id}`}>
-                    <img src={book.Cover} alt={book.Title} />
+                    <img src={book.Cover} alt={book.Title} loading="lazy"/>
                     <strong>{book.Title}</strong>
                   </Link>
                   <div>
@@ -136,9 +152,7 @@ export default function SearchByCategory() {
                   </div>
                   <button
                     className="btn-borrow-2"
-                    onClick={() => {
-                      handleAvailable(book);
-                    }}
+                    onClick={() => handleAvailable(book)}
                   >
                     Mượn
                   </button>
@@ -148,6 +162,20 @@ export default function SearchByCategory() {
               <p>Không có sách nào phù hợp với chủ đề đã chọn.</p>
             )}
           </div>
+
+          {books.length > itemsPerPage && (
+            <div className="pagination">
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => handlePageChange(i + 1)}
+                  className={currentPage === i + 1 ? "active" : ""}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

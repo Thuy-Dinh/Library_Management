@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlus, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from "react-router-dom";
@@ -15,7 +15,7 @@ export default function ProductManagement() {
     const [searchTitle, setSearchTitle] = useState("");
     const [searchAuthor, setSearchAuthor] = useState("");
     const [searchCategory, setSearchCategory] = useState("");
-    const [searchSubcategory, setSearchSubcategory] = useState("");
+    const [searchAvailability, setSearchAvailability] = useState("");
     const [searchPublisher, setSearchPublisher] = useState("");
     const [searchYear, setSearchYear] = useState("");
 
@@ -42,30 +42,32 @@ export default function ProductManagement() {
         const title = item.Title?.toLowerCase() ?? "";
         const author = item.Author?.toLowerCase() ?? "";
         const category = item.Category?.Name?.toLowerCase() ?? "";
-        const subcategory = item.Subcategory?.toLowerCase() ?? "";
+        const availability = item.Availability ?? ""; // Không toLowerCase
         const publisher = item.Publisher?.toLowerCase() ?? "";
         const year = item.Publication_year?.toString() ?? "";
-
-        return (
+    
+        const isMatch = (
             code.includes(searchCode.toLowerCase()) &&
             title.includes(searchTitle.toLowerCase()) &&
             author.includes(searchAuthor.toLowerCase()) &&
             category.includes(searchCategory.toLowerCase()) &&
-            subcategory.includes(searchSubcategory.toLowerCase()) &&
+            availability.includes(searchAvailability) && // Không toLowerCase
             publisher.includes(searchPublisher.toLowerCase()) &&
             year.includes(searchYear)
         );
-    }) || [];
+    
+        return isMatch;
+    }) || [];    
 
     const sortedData = [...filteredData].sort((a, b) => {
         let valA = a[sortField];
         let valB = b[sortField];
-    
+
         if (sortField === "Favorites") {
             valA = a.Rating || 0;
             valB = b.Rating || 0;
         }
-    
+
         if (typeof valA === "string") return valA.localeCompare(valB);
         return valA - valB;
     });    
@@ -123,7 +125,15 @@ export default function ProductManagement() {
                     <div className="field"><label>Tiêu đề</label><input value={searchTitle} onChange={(e) => setSearchTitle(e.target.value)} placeholder="Nhập tiêu đề" /></div>
                     <div className="field"><label>Tác giả</label><input value={searchAuthor} onChange={(e) => setSearchAuthor(e.target.value)} placeholder="Nhập tên tác giả" /></div>
                     <div className="field"><label>Chủ đề</label><input value={searchCategory} onChange={(e) => setSearchCategory(e.target.value)} placeholder="Nhập chủ đề" /></div>
-                    <div className="field"><label>Thể loại con</label><input value={searchSubcategory} onChange={(e) => setSearchSubcategory(e.target.value)} placeholder="Nhập thể loại con" /></div>
+                    <div className="field">
+                        <label>Trạng thái</label>
+                        <select value={searchAvailability} onChange={(e) => setSearchAvailability(e.target.value)}>
+                            <option value="">Tất cả</option>
+                            <option value="Available">Có sẵn</option>
+                            <option value="Unavailable">Đang được mượn</option>
+                            <option value="Torned">Hỏng</option>
+                        </select>
+                    </div>
                     <div className="field"><label>Nhà xuất bản</label><input value={searchPublisher} onChange={(e) => setSearchPublisher(e.target.value)} placeholder="Nhập NXB" /></div>
                     <div className="field"><label>Năm xuất bản</label><input type="number" value={searchYear} onChange={(e) => setSearchYear(e.target.value)} placeholder="VD: 2020" /></div>
                     <div className="field">
@@ -144,11 +154,11 @@ export default function ProductManagement() {
                             <th>Tiêu đề</th>
                             <th>Tác giả</th>
                             <th>Chủ đề</th>
-                            <th>Thể loại con</th>
                             <th>NXB</th>
                             <th>Năm XB</th>
                             <th>Giá</th>
                             <th>Đánh giá</th>
+                            <th>Trạng thái</th>
                             <th>Hành động</th>
                         </tr>
                     </thead>
@@ -159,11 +169,21 @@ export default function ProductManagement() {
                                 <td style={{ cursor: 'pointer' }} onClick={() => handleDetail(item._id)}>{item.Title}</td>
                                 <td>{item.Author}</td>
                                 <td>{item.Category?.Name}</td>
-                                <td>{item.Subcategory}</td>
                                 <td>{item.Publisher}</td>
                                 <td>{item.Publication_year}</td>
                                 <td>{item.Price}</td>
                                 <td>{item.Rating}</td>
+                                <td style={{ color: 
+                                    item.Availability === "Available" ? "green" : 
+                                    item.Availability === "Unavailable" ? "red" : 
+                                    "orange"
+                                }}>
+                                    {item.Availability === "Available"
+                                        ? "✅ Có sẵn"
+                                        : item.Availability === "Unavailable"
+                                            ? "🔴 Đang được mượn"
+                                            : "⚠️ Hỏng"}
+                                </td>
                                 <td>
                                     <div className="product-btn">
                                         <button className="btn-edit" onClick={() => handleEdit(item)}><FontAwesomeIcon icon={faPenToSquare} /></button>

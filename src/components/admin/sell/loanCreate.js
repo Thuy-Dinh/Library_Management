@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable'; // thêm dòng này
+import autoTable from 'jspdf-autotable';
 import { font } from '../../../font/Roboto-Regular-normal';
 import './loanCreate.css'; 
 import { CreateLoanApi } from '../../../api/loan';
+import { searchSuggestionApi } from '../../../api/book';
 
 function LoanCreate() {
     const navigate = useNavigate();
@@ -17,6 +18,7 @@ function LoanCreate() {
         borrowType: 'Mượn tại chỗ'
     });
 
+    const [suggestions, setSuggestions] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
 
     const handleChange = (e) => {
@@ -26,6 +28,35 @@ function LoanCreate() {
         });
     };
 
+    const handleBookCodeInputChange = async (e) => {
+        const value = e.target.value;
+        setFormData({
+            ...formData,
+            bookCodeInput: value
+        });
+    
+        if (value.trim()) {
+            try {
+                const res = await searchSuggestionApi(value.trim());
+                if (res && res.success && Array.isArray(res.data)) {
+                    // Chuyển đổi dữ liệu thành dạng cần thiết
+                    const books = res.data.map(book => ({
+                        code: book.Code,
+                        title: book.Title
+                    }));
+                    setSuggestions(books);
+                } else {
+                    setSuggestions([]);
+                }
+            } catch (error) {
+                console.error("Lỗi lấy gợi ý mã sách:", error);
+                setSuggestions([]);
+            }
+        } else {
+            setSuggestions([]);
+        }
+    };    
+
     const handleAddBookCode = () => {
         if (!formData.bookCodeInput.trim()) return;
 
@@ -34,6 +65,8 @@ function LoanCreate() {
             bookCodes: [...prevState.bookCodes, prevState.bookCodeInput.trim()],
             bookCodeInput: ''
         }));
+
+        setSuggestions([]);
     };
 
     const handleRemoveBookCode = (index) => {
@@ -42,50 +75,42 @@ function LoanCreate() {
             bookCodes: prevState.bookCodes.filter((_, i) => i !== index)
         }));
     };
- 
+
     const handleExportPDF = (newLoanCode) => { 
         const doc = new jsPDF();
-        
-        // Thêm font và cài đặt font
         doc.addFileToVFS("Roboto.ttf", font);
         doc.addFont("Roboto.ttf", "Roboto", "normal");
         doc.setFont("Roboto");
-    
-        // Thêm logo (Giả sử logo của thư viện ở đường dẫn này)
-        const logo = '/Logo-SVG.png';  // Thay đổi đường dẫn logo của bạn
-        doc.addImage(logo, 'PNG', 175, 10, 20, 20);  // Thêm logo vào vị trí (10, 10)
-    
-        // Tiêu đề Hóa Đơn
+
+        const logo = '/Logo-SVG.png';
+        doc.addImage(logo, 'PNG', 175, 10, 20, 20); 
+
         doc.setFontSize(16);
-        doc.setTextColor(0, 102, 204);  // Màu xanh cho tiêu đề
-        doc.text('PHIẾU MƯỢN SÁCH', 85, 35);  // Vị trí tiêu đề
+        doc.setTextColor(0, 102, 204); 
+        doc.text('PHIẾU MƯỢN SÁCH', 85, 35);
 
         doc.setFontSize(12);
         doc.setTextColor(0, 0, 0); 
         doc.text(`${newLoanCode}`, 20, 25);
-        doc.text('Thư viện BokStory', 140, 20);  // Vị trí tiêu đề
-        doc.text('Số 1, Đại Cồ Việt, Hai Bà Trưng, Hà Nội', 100, 25);  // Vị trí tiêu đề
-    
-        // Thông tin khách hàng và hóa đơn
+        doc.text('Thư viện BokStory', 140, 20);  
+        doc.text('Số 1, Đại Cồ Việt, Hai Bà Trưng, Hà Nội', 100, 25);  
+
         doc.setFontSize(12);
         doc.setTextColor(255, 10, 10); 
         doc.text(`🧾 Mã thẻ bạn đọc: ${formData.lbCode}`, 20, 45);
         doc.text(`📦 Hình thức mượn: ${formData.borrowType}`, 20, 55);
         doc.text(`🗓️ Ngày tạo: ${new Date().toLocaleDateString('vi-VN')}`, 20, 65);
-    
-        // Tạo khung bao quanh thông tin
-        doc.rect(10, 10, 190, 160);  // Vẽ khung bao quanh phần thông tin (x, y, width, height)
-    
-        // Dữ liệu bảng
+
+        doc.rect(10, 10, 190, 160);  
+
         const tableData = formData.bookCodes.map((code, index) => [
             index + 1,
             code
         ]);
-    
-        // Bảng danh sách sách mượn
+
         doc.setFontSize(16);
-        doc.setTextColor(0, 102, 204);  // Màu xanh cho tiêu đề
-        doc.text('Danh sách sách mượn', 20, 80);  // Vị trí tiêu đề
+        doc.setTextColor(0, 102, 204);  
+        doc.text('Danh sách sách mượn', 20, 80);
         autoTable(doc, {
             startY: 85,
             head: [['STT', 'Mã sách']],
@@ -98,40 +123,37 @@ function LoanCreate() {
                 halign: 'center',
             },
             headStyles: {
-                fillColor: [0, 102, 204],  // Màu nền tiêu đề bảng
-                textColor: 255,  // Màu chữ tiêu đề bảng
+                fillColor: [0, 102, 204],
+                textColor: 255,
                 fontStyle: 'bold',
             },
             alternateRowStyles: {
-                fillColor: [240, 240, 240]  // Màu nền các dòng chẵn
+                fillColor: [240, 240, 240]
             },
             columnStyles: {
                 0: { cellWidth: 20 },
                 1: { cellWidth: 160 }
             },
         });
-    
-        // Thêm footer
+
         doc.setFontSize(10);
         doc.setTextColor(100);
         const footerText = 'Thư viện BokStory - www.bookstory.edu.vn';
-        const footerWidth = doc.getTextWidth(footerText); // Lấy chiều rộng của footer text
-        const footerX = (doc.internal.pageSize.width - footerWidth) / 2; // Căn giữa footer
-        doc.text(footerText, footerX, 160);  // Vị trí footer căn giữa dưới cùng
-    
-        // Lưu PDF với tên có mã thẻ
+        const footerWidth = doc.getTextWidth(footerText);
+        const footerX = (doc.internal.pageSize.width - footerWidth) / 2;
+        doc.text(footerText, footerX, 160);
+
         doc.save(`don_muon_${formData.lbCode}.pdf`);
     };
-    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         if (!formData.lbCode || formData.bookCodes.length === 0) {
             setErrorMessage("Vui lòng nhập mã thẻ và ít nhất một mã sách.");
             return;
         }
-    
+
         try {
             const result = await CreateLoanApi(
                 formData.lbCode,
@@ -141,21 +163,21 @@ function LoanCreate() {
                 formData.borrowType,
                 0
             );
-    
+
             if (result.errCode === 0 && result.loan) {
                 const { LoanCode, LoanID } = result.loan;
-    
+
                 setFormData(prev => ({
                     ...prev,
                     loanCode: LoanCode || `LOAN-${LoanID}`
                 }));
                 
                 const newLoanCode = LoanCode || `LOAN-${LoanID}`;
-                
+
                 setTimeout(() => {
                     handleExportPDF(newLoanCode);
                     navigate("/admin/order-management");
-                }, 200);                
+                }, 200);
             } else {
                 setErrorMessage(result.message || "Lỗi tạo đơn mượn");
             }
@@ -163,7 +185,7 @@ function LoanCreate() {
             console.error("Lỗi khi tạo đơn:", error);
             setErrorMessage("Lỗi hệ thống khi tạo đơn mượn.");
         }
-    };    
+    };
 
     return (
         <div className="book-loan-form-container">
@@ -183,28 +205,51 @@ function LoanCreate() {
 
                 <div className="form-group">
                     <label>Nhập mã sách</label>
-                    <div className="book-code-input">
+                    <div className="book-code-input" style={{ position: "relative" }}>
                         <input
                             type="text"
                             name="bookCodeInput"
                             placeholder="Nhập mã sách"
                             value={formData.bookCodeInput}
-                            onChange={handleChange}
+                            onChange={handleBookCodeInputChange}
                         />
                         <button type="button" onClick={handleAddBookCode}>Thêm</button>
+
+                        {suggestions.length > 0 && (
+                            <ul className="suggestion-list">
+                                {suggestions.map((book, idx) => (
+                                    <li
+                                        key={idx}
+                                        onClick={() => {
+                                            setFormData(prevState => ({
+                                                ...prevState,
+                                                bookCodes: [...prevState.bookCodes, {
+                                                    code: book.code,
+                                                    title: book.title
+                                                }],
+                                                bookCodeInput: ''
+                                            }));
+                                            setSuggestions([]);
+                                        }}                                        
+                                    >
+                                        {book.code} - {book.title}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 </div>
 
                 {formData.bookCodes.length > 0 && (
                     <div className="book-code-list">
-                        <strong>Danh sách mã sách:</strong>
+                        <strong>Danh sách sách:</strong>
                         <ul>
-                            {formData.bookCodes.map((code, index) => (
-                                <li key={index}>
-                                    {code} 
-                                    <button type="button" onClick={() => handleRemoveBookCode(index)}>❌</button>
-                                </li>
-                            ))}
+                        {formData.bookCodes.map((book, index) => (
+                            <li key={index}>
+                                {book.code}: {book.title}
+                                <button type="button" onClick={() => handleRemoveBookCode(index)}>❌</button>
+                            </li>
+                        ))}
                         </ul>
                     </div>
                 )}

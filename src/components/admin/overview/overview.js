@@ -1,91 +1,135 @@
 import React, { useEffect, useState } from 'react';
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+  BarElement as BarEl
+} from 'chart.js';
 import './overview.css';
-import { totalBookApi, availableBookApi, topBorrowedBookApi, countBorrowedBookApi } from '../../../api/overview';
+import {
+  totalBookApi,
+  availableBookApi,
+  topBorrowedBookApi,
+  countBorrowedBookApi,
+  countDamagedBooksApi,
+  borrowedByMonthApi
+} from '../../../api/overview';
 
-ChartJS.register(Title, Tooltip, Legend, ArcElement);
+// Register Chart.js components
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+  BarEl
+);
 
 const Overview = () => {
-  // const data = {
-  //   labels: ['Completed', 'Pending', 'Shipped', 'Returned'],
-  //   datasets: [
-  //     {
-  //       data: [40, 20, 30, 10],
-  //       backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0'],
-  //     },
-  //   ],
-  // };
-
-  const [totalBook, setTotalBook] = useState("");
-  const [availableBook, setAvailableBook] = useState("");
+  const [totalBook, setTotalBook] = useState(0);
+  const [availableBook, setAvailableBook] = useState(0);
   const [topBook, setTopBook] = useState([]);
   const [borrowedBooks, setBorrowedBooks] = useState(0);
+  const [damagedBooks, setDamagedBooks] = useState(0); // sửa tên đúng
+  const [filterType, setFilterType] = useState('day');
+  const [monthlyBorrowData, setMonthlyBorrowData] = useState(null);
 
-  const [filterType, setFilterType] = useState("day"); 
-
+  // Fetch totals and top books on mount
   useEffect(() => {
-    const fetchTotalBooks = async () => {
+    const fetchStats = async () => {
       try {
         const total = await totalBookApi();
         setTotalBook(total.totalBooks);
       } catch (error) {
-        console.error("Error fetching total books:", error);
+        console.error('Error fetching total books:', error);
       }
-    };
 
-    const fetchAvailableBooks = async () => {
       try {
-        const count = await availableBookApi();
-        setAvailableBook(count.totalAvailableBooks);
+        const avail = await availableBookApi();
+        setAvailableBook(avail.totalAvailableBooks);
       } catch (error) {
-        console.error("Error fetching total available books:", error);
+        console.error('Error fetching available books:', error);
       }
-    };
 
-    const fetchTopBooks = async () => {
       try {
-        const response = await topBorrowedBookApi();
-        setTopBook(response.topBorrowedBooks || []);
+        const topRes = await topBorrowedBookApi();
+        setTopBook(topRes.topBorrowedBooks || []);
       } catch (error) {
-        console.error("Error fetching top borrowed books:", error);
+        console.error('Error fetching top borrowed books:', error);
       }
+
+      try {
+        const damaged = await countDamagedBooksApi(); // gọi API sách hỏng
+        setDamagedBooks(damaged.damagedBooks);        // set state
+      } catch (error) {
+        console.error('Error fetching damaged books:', error);
+      }
+
+      handleCountBorrowedBooks(filterType);
+      fetchMonthlyBorrowStats();
     };
 
-    fetchTotalBooks();
-    fetchAvailableBooks();
-    fetchTopBooks();
-    handleCountBorrowedBooks(filterType);
+    fetchStats();
   }, []);
 
+  // Handle change in summary filter (day/month/year)
   const handleCountBorrowedBooks = async (type) => {
     const today = new Date();
-    let day = null, month = null, year = null;
-
-    if (type === "day") {
+    let day = null;
+    let month = null;
+    let year = null;
+    if (type === 'day') {
       day = today.getDate();
       month = today.getMonth() + 1;
       year = today.getFullYear();
-    } else if (type === "month") {
+    } else if (type === 'month') {
       month = today.getMonth() + 1;
       year = today.getFullYear();
-    } else if (type === "year") {
+    } else if (type === 'year') {
       year = today.getFullYear();
     }
-
     try {
-      const result = await countBorrowedBookApi(day, month, year);
-      console.log(result);
-      setBorrowedBooks(result.countBorrowedBooks);
+      const res = await countBorrowedBookApi(day, month, year);
+      setBorrowedBooks(res.countBorrowedBooks);
     } catch (error) {
-      console.error("Error fetching borrowed books count:", error);
+      console.error('Error fetching borrowed books count:', error);
     }
   };
 
+  // Fetch monthly borrow statistics
+  const fetchMonthlyBorrowStats = async () => {
+    try {
+      const year = new Date().getFullYear();
+      const res = await borrowedByMonthApi(year);
+      const { months, counts } = res;
+      setMonthlyBorrowData({
+        labels: months,
+        datasets: [
+          {
+            label: 'Số lượt mượn sách',
+            data: counts,
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          },
+        ],
+      });
+    } catch (error) {
+      console.error('Error fetching monthly borrow stats:', error);
+    }
+  };
+
+  // Handle filter change
   const handleFilterChange = (e) => {
-    const selectedType = e.target.value;
-    setFilterType(selectedType);
-    handleCountBorrowedBooks(selectedType); // Gọi hàm ngay khi thay đổi
+    const type = e.target.value;
+    setFilterType(type);
+    handleCountBorrowedBooks(type);
   };
 
   return (
@@ -102,12 +146,14 @@ const Overview = () => {
           <p>Quyển sách</p>
         </div>
         <div className="stat-card">
+          <h3>Tổng số sách bị hỏng hoặc mất</h3>
+          <p>{damagedBooks}</p>
+          <p>Quyển sách</p>
+        </div>
+        <div className="stat-card">
           <h3>Số sách được mượn theo</h3>
           <div className="filter-container">
-            <select
-              value={filterType}
-              onChange={handleFilterChange} // Gọi hàm khi thay đổi
-            >
+            <select value={filterType} onChange={handleFilterChange}>
               <option value="day">Ngày</option>
               <option value="month">Tháng</option>
               <option value="year">Năm</option>
@@ -146,10 +192,23 @@ const Overview = () => {
             </tbody>
           </table>
         </div>
-        {/* <div className="chart-container">
-          <h3>Trạng thái đơn hàng</h3>
-          <Pie data={data} />
-        </div> */}
+
+        {/* Biểu đồ mượn sách theo tháng */}
+        {monthlyBorrowData && (
+          <div className="chart-container">
+            <h3>Biểu đồ mượn sách theo tháng (năm {new Date().getFullYear()})</h3>
+            <Bar
+              data={monthlyBorrowData}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: { position: 'top' },
+                  title: { display: true, text: 'Số lượt mượn sách mỗi tháng' },
+                },
+              }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

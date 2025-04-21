@@ -12,9 +12,11 @@ function AllLoan() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userName, setUserName] = useState('');
     const [loans, setLoans] = useState([]);
-    const [books, setBooks] = useState({}); // State lưu thông tin chi tiết sách theo BookID
+    const [filteredLoans, setFilteredLoans] = useState([]);
+    const [books, setBooks] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [statusFilter, setStatusFilter] = useState('Tất cả');
 
     useEffect(() => {
         if (storedName && storedToken) {
@@ -31,29 +33,38 @@ function AllLoan() {
                 const loanResponse = await getAllLoanApi(storedEmail);
                 const loanData = loanResponse.allLoan || [];
                 setLoans(loanData);
-    
-                // Lấy danh sách BookID duy nhất
+                setFilteredLoans(loanData);
+
                 const bookIds = [...new Set(loanData.map((item) => item.BookID))];
                 const bookRequests = bookIds.map((id) => BookDetailApi(id));
                 const bookResponses = await Promise.all(bookRequests);
-    
-                // Ánh xạ BookID với chi tiết sách (chỉ lấy phần tử đầu tiên)
+
                 const bookData = {};
                 bookResponses.forEach((response, index) => {
                     const bookDetail = response.bookDetail;
-                    bookData[bookIds[index]] = bookDetail.length > 0 ? bookDetail[0] : {}; 
+                    bookData[bookIds[index]] = bookDetail.length > 0 ? bookDetail[0] : {};
                 });
-    
-                setBooks(bookData); // Lưu trữ ánh xạ BookID -> bookDetail
+
+                setBooks(bookData);
                 setLoading(false);
             } catch (err) {
                 setError(err.message);
                 setLoading(false);
             }
         };
-    
+
         fetchLoansAndBooks();
-    }, [storedEmail]);    
+    }, [storedEmail]);
+
+    const handleStatusFilter = (status) => {
+        setStatusFilter(status);
+        if (status === 'Tất cả') {
+            setFilteredLoans(loans);
+        } else {
+            const filtered = loans.filter((loan) => loan.State === status);
+            setFilteredLoans(filtered);
+        }
+    };
 
     if (loading) {
         return <div>Đang tải dữ liệu...</div>;
@@ -71,11 +82,21 @@ function AllLoan() {
                 setIsAuthenticated={setIsAuthenticated}
             />
             <div className='loan-body'>
-                <div className='loan-title'>Lịch sử mượn sách</div>
+                <div className='loan-title'>📚 Lịch sử mượn sách</div>
+
+                <div className="filter-buttons">
+                    <button onClick={() => handleStatusFilter('Tất cả')} className="filter-btn">Tất cả</button>
+                    <button onClick={() => handleStatusFilter('Yêu cầu mượn')} className="filter-btn">Yêu cầu mượn</button>
+                    <button onClick={() => handleStatusFilter('Đang mượn')} className="filter-btn">Đang mượn</button>
+                    <button onClick={() => handleStatusFilter('Đã trả')} className="filter-btn">Đã trả</button>
+                    <button onClick={() => handleStatusFilter('Quá hạn')} className="filter-btn">Quá hạn</button>
+                    <button onClick={() => handleStatusFilter('Bị từ chối')} className="filter-btn">Bị từ chối</button>
+                </div>
+
                 <div className="loan-detail">
-                    {loans && loans.length > 0 ? (
-                        loans.map((item, index) => {
-                            const book = books[item.BookID] || {}; // Lấy thông tin sách từ BookID
+                    {filteredLoans && filteredLoans.length > 0 ? (
+                        filteredLoans.map((item, index) => {
+                            const book = books[item.BookID] || {};
                             return (
                                 <div key={index} className='loan-content'>
                                     <img
@@ -83,19 +104,29 @@ function AllLoan() {
                                         alt={book.Title}
                                     />
                                     <div className="body-topic">
-                                        <div style={{fontSize: 30, fontWeight: 'bold'}}>{book.Title}</div>
-                                        <div><span style={{fontWeight: 'bold'}}>Ngày mượn: </span>{item.DayStart}</div>
-                                        <div><span style={{fontWeight: 'bold'}}>Hạn trả: </span>{item.DayEnd}</div>
-                                        <div><span style={{fontWeight: 'bold'}}>Hình thức mượn: </span>{item.Method}</div>
-                                        <div><span style={{fontWeight: 'bold'}}>Cọc: </span>{item.Payment}</div>
-                                        <div><span style={{fontWeight: 'bold'}}>Ghi chú: </span>{item.Note ? item.Note : "Không có ghi chú"}</div>
-                                        <div><span style={{fontWeight: 'bold'}}>Trạng thái: </span><span style={{color: 'red'}}>{item.State}</span></div>
-                                    </div>   
+                                        <div className="book-title">{book.Title}</div>
+                                        <div><strong>Ngày mượn:</strong> {item.DayStart}</div>
+                                        <div><strong>Hạn trả:</strong> {item.DayEnd}</div>
+                                        <div><strong>Hình thức mượn:</strong> {item.Method}</div>
+                                        <div><strong>Cọc:</strong> {item.Payment}</div>
+                                        <div><strong>Ghi chú:</strong> {item.Note ? item.Note : "Không có ghi chú"}</div>
+                                        <div className="loan-status">
+                                            <span className="status-label">Trạng thái: </span>
+                                            <span className={`status-badge ${item.State.toLowerCase().replace(/\s/g, '-')}`}>
+                                                {item.State === 'Yêu cầu mượn' && '📝 '}
+                                                {item.State === 'Đang mượn' && '📚 '}
+                                                {item.State === 'Đã trả' && '✅ '}
+                                                {item.State === 'Quá hạn' && '⏰ '}
+                                                {item.State === 'Bị từ chối' && '❌ '}
+                                                {item.State}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             );
                         })
                     ) : (
-                        <div>Không có dữ liệu</div>
+                        <div>Không có đơn nào</div>
                     )}
                 </div>
             </div>

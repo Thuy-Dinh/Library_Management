@@ -48,9 +48,33 @@ async function countBorrowedBookApi(day, month, year) {
     }
 }
 
+async function countDamagedBooksApi() {
+    try {
+        const response = await axios.get('http://localhost:3050/overwiew/damaged-books');
+
+        return response.data;  
+    } catch (error) {
+        console.error('Error fetching total books:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+}
+
+async function borrowedByMonthApi(year) {
+    try {
+        console.log(year);
+        const response  = await axios.get(`http://localhost:3050/overwiew/borrowed-by-month?year=${year}`);
+        return response.data;  
+    } catch (error) {
+      console.error('Error fetching monthly borrow stats:', error);
+      throw error;  
+    }
+};
+
 export { 
     totalBookApi, 
     availableBookApi,
     topBorrowedBookApi,
-    countBorrowedBookApi
+    countBorrowedBookApi,
+    countDamagedBooksApi,
+    borrowedByMonthApi
 };  

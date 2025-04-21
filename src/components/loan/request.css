@@ -1,30 +1,48 @@
+/* Reset và cơ bản */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
+  
 .request-body {
-    height: 100vh;
-    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f0f4ff, #dbe9ff);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #ccccccb2;
 }
-
+  
+  /* Nội dung trung tâm */
 .request-content {
-    border: 1px solid #fff;
-    background-color: #fff;
-    padding: 50px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-top: 30px;
-    color: #db200b;
-    font-size: 22px;
-    font-weight: 700;
-    display:flex;
+    flex: 1;
+    display: flex;
     flex-direction: column;
-    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    color: #333;
+    animation: fadeIn 1s ease;
 }
+  
+  /* Văn bản thông báo */
+.request-content span {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: #1a237e;
+    font-weight: 500;
+}
+  
+  /* Hiệu ứng fade in */
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+}
+  

@@ -85,11 +85,29 @@ async function UpdateUserStateApi(id, state) {
     }
 };
 
+async function UpdateUserApi(userCode, updatedData) {
+    try {
+        const response = await axios.post(
+            `http://localhost:3050/update-user/${userCode}`,
+            updatedData,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Cập nhật thất bại!');
+    }
+};
+
 export { 
     SignupApi,
     LoginApi,
     ComfirmApi,
     GetAllUserApi,
     GetAUserApi,
-    UpdateUserStateApi
+    UpdateUserStateApi, 
+    UpdateUserApi
 };  
