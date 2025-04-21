@@ -105,7 +105,8 @@ function LoanCreate() {
 
         const tableData = formData.bookCodes.map((code, index) => [
             index + 1,
-            code
+            code.code,
+            code.title
         ]);
 
         doc.setFontSize(16);
@@ -113,7 +114,7 @@ function LoanCreate() {
         doc.text('Danh sách sách mượn', 20, 80);
         autoTable(doc, {
             startY: 85,
-            head: [['STT', 'Mã sách']],
+            head: [['STT', 'Mã sách', 'Tên sách']],
             body: tableData,
             styles: {
                 font: "Roboto",
@@ -132,7 +133,8 @@ function LoanCreate() {
             },
             columnStyles: {
                 0: { cellWidth: 20 },
-                1: { cellWidth: 160 }
+                1: { cellWidth: 50 },
+                2: { cellWidth: 110 }
             },
         });
 

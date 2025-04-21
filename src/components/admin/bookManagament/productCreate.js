@@ -1,273 +1,248 @@
 import React, { useState, useEffect } from "react";
 import "./productCreate.css";
 import { useNavigate } from "react-router-dom";
-import { CreateBookApi, GetAllTopicApi, CreateTopicApi } from "../../../api/book";
+import {
+  CreateBookApi,
+  GetAllTopicApi,
+  CreateTopicApi,
+  GetAllAreaApi
+} from "../../../api/book";
 
-const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-        reader.readAsDataURL(file);
-    });
-};
+const convertToBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
+  });
 
-export default function ProductCreate() {
+  export default function ProductCreate() {
     const navigate = useNavigate();
+  
     const [formData, setFormData] = useState({
-        title: "",
-        author: "",
-        topic: "",
-        subcategory: "",
-        tag: "",
-        publisher: "",
-        publication_year: "",
-        edition: "",
-        summary: "",
-        language: "",
-        cover: null,
+      title: "",
+      author: "",
+      topic: "",
+      subcategory: "",
+      tag: "",
+      publisher: "",
+      publication_year: "",
+      edition: "",
+      summary: "",
+      language: "",
+      cover: null,
+      area: "",   // khu vực
+      shelf: "",  // kệ
+      slot: "",   // tầng
+      price: ""   // thêm trường price vào đây
     });
+  
     const [preview, setPreview] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [topics, setTopics] = useState([]); // Danh sách các topics
-    const [isNewTopic, setIsNewTopic] = useState(false); // Trạng thái tạo chủ đề mới
-    const [newTopic, setNewTopic] = useState(""); // Chủ đề mới
-
+  
+    const [topics, setTopics] = useState([]);
+    const [isNewTopic, setIsNewTopic] = useState(false);
+    const [newTopic, setNewTopic] = useState("");
+  
+    const [areas, setAreas] = useState([]);  // danh sách khu vực
+  
+    // Lấy topics & areas
     useEffect(() => {
-        const fetchTopics = async () => {
-            try {
-                const response = await GetAllTopicApi(); // API lấy danh sách các topics
-                setTopics(response.data); // Giả sử response.data là danh sách các topics
-            } catch (error) {
-                console.error("Lỗi khi lấy danh sách chủ đề:", error);
-            }
-        };
-        fetchTopics();
-    }, []);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
-
-    const handleTopicChange = (e) => {
-        const value = e.target.value;
-        if (value === "new") {
-            setIsNewTopic(true);  // Hiển thị ô nhập chủ đề mới
-            setFormData({ ...formData, topic: "" });  // Đặt giá trị topic trống khi tạo chủ đề mới
-        } else {
-            setIsNewTopic(false);  // Ẩn ô nhập chủ đề mới
-            setFormData({ ...formData, topic: value });  // Lưu ID của chủ đề chọn
-        }
-    };       
-
-    const handleImageChange = async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setIsLoading(true);
-            try {
-                const base64Image = await convertToBase64(file);
-                setFormData({
-                    ...formData,
-                    cover: base64Image,
-                });
-                setPreview(URL.createObjectURL(file));
-            } catch (error) {
-                console.error("Lỗi khi chuyển đổi ảnh:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-    
+      (async () => {
         try {
-            let topicToSubmit = formData.topic; // Lấy giá trị chủ đề từ formData
-    
-            if (isNewTopic && newTopic.trim()) {
-                // Kiểm tra nếu chủ đề mới đã tồn tại trong danh sách các chủ đề
-                const topicExists = topics.some(topic => topic.topic.toLowerCase() === newTopic.trim().toLowerCase());
-    
-                if (topicExists) {
-                    alert("Chủ đề này đã tồn tại. Vui lòng chọn trong danh sách chủ đề.");
-                    return;
-                }
-    
-                const newTopicResponse = await CreateTopicApi({ topic: newTopic });
-                topicToSubmit = newTopicResponse.data.Name; 
-            }
-    
-            // Gọi API tạo sách với chủ đề đã chọn
-            const response = await CreateBookApi(
-                formData.title,
-                formData.author,
-                topicToSubmit, 
-                formData.subcategory,
-                formData.tag,
-                formData.publisher,
-                formData.publication_year,
-                formData.edition,
-                formData.summary,
-                formData.language,
-                formData.cover
-            );
-    
-            console.log("Tạo sách thành công:", response);
-            alert("Tạo sách thành công!");
-            navigate("/admin/product-management");
-    
-        } catch (error) {
-            console.error("Lỗi khi tạo sách hoặc chủ đề:", error);
-            alert("Có lỗi xảy ra!");
+          const tRes = await GetAllTopicApi();
+          setTopics(tRes.data || []);
+        } catch (e) {
+          console.error("Lỗi khi lấy chủ đề:", e);
         }
-    };          
-
+        try {
+          const aRes = await GetAllAreaApi();
+          setAreas(aRes.areas || []);
+        } catch (e) {
+          console.error("Lỗi khi lấy khu vực:", e);
+        }
+      })();
+    }, []);
+  
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData(fd => ({ ...fd, [name]: value }));
+    };
+  
+    const handleTopicChange = (e) => {
+      const v = e.target.value;
+      if (v === "new") {
+        setIsNewTopic(true);
+        setFormData(fd => ({ ...fd, topic: "" }));
+      } else {
+        setIsNewTopic(false);
+        setFormData(fd => ({ ...fd, topic: v }));
+      }
+    };
+  
+    const handleImageChange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      setIsLoading(true);
+      try {
+        const b64 = await convertToBase64(file);
+        setFormData(fd => ({ ...fd, cover: b64 }));
+        setPreview(URL.createObjectURL(file));
+      } catch (e) {
+        console.error("Lỗi chuyển ảnh:", e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        let topicToSubmit = formData.topic;
+        if (isNewTopic && newTopic.trim()) {
+          const exists = topics.some(t => t.topic.toLowerCase() === newTopic.trim().toLowerCase());
+          if (exists) {
+            alert("Chủ đề đã tồn tại, vui lòng chọn danh sách.");
+            return;
+          }
+          const nt = await CreateTopicApi({ topic: newTopic });
+          topicToSubmit = nt.data.Name;
+        }
+        // Gửi payload gồm cả area, shelf, slot và price
+        const payload = {
+          ...formData,
+          topic: topicToSubmit
+        };
+        await CreateBookApi(payload);
+        alert("Tạo sách thành công!");
+        navigate("/admin/product-management");
+      } catch (error) {
+        console.error("Lỗi khi tạo sách:", error);
+        alert("Có lỗi xảy ra!");
+      }
+    };
+  
     return (
-        <div className="product-container">
-            <div className="product-body">
-                <h1>Thêm Sách</h1>
-                <form className="product-create" onSubmit={handleSubmit}>
-                    <label htmlFor="title">
-                        <span>Tiêu đề</span>
-                        <input
-                            type="text"
-                            id="title"
-                            name="title"
-                            value={formData.title}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <label htmlFor="author">
-                        <span>Tác giả</span>
-                        <input
-                            type="text"
-                            id="author"
-                            name="author"
-                            value={formData.author}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <label htmlFor="topic">
-                        <span>Chủ đề</span>
-                        <select
-                            id="topic"
-                            name="topic"
-                            value={formData.topic}
-                            onChange={handleTopicChange}
-                        >
-                            <option value="">Chọn chủ đề</option>
-                            {topics.map((topic) => (
-                                <option key={topic._id} value={topic._id}>
-                                    {topic.topic}
-                                </option>
-                            ))}
-                            <option value="new">Tạo chủ đề mới</option>
-                        </select>
-                    </label>
-                    {isNewTopic && (
-                        <label htmlFor="newTopic">
-                            <span>Nhập chủ đề mới</span>
-                            <input
-                                type="text"
-                                id="newTopic"
-                                value={newTopic}
-                                onChange={(e) => setNewTopic(e.target.value)}
-                                placeholder="Nhập chủ đề mới"
-                                required
-                            />
-                        </label>
-                    )}
-                    <label htmlFor="subcategory">
-                        <span>Phân loại phụ</span>
-                        <input
-                            type="text"
-                            id="subcategory"
-                            name="subcategory"
-                            value={formData.subcategory}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label htmlFor="tag">
-                        <span>Thẻ</span>
-                        <input
-                            type="text"
-                            id="tag"
-                            name="tag"
-                            value={formData.tag}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label htmlFor="publisher">
-                        <span>Nhà xuất bản</span>
-                        <input
-                            type="text"
-                            id="publisher"
-                            name="publisher"
-                            value={formData.publisher}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label htmlFor="publication_year">
-                        <span>Năm xuất bản</span>
-                        <input
-                            type="number"
-                            id="publication_year"
-                            name="publication_year"
-                            value={formData.publication_year}
-                            onChange={handleChange}
-                            min="0"
-                        />
-                    </label>
-                    <label htmlFor="edition">
-                        <span>Phiên bản</span>
-                        <input
-                            type="text"
-                            id="edition"
-                            name="edition"
-                            value={formData.edition}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label htmlFor="summary">
-                        <span>Tóm tắt</span>
-                        <textarea
-                            id="summary"
-                            name="summary"
-                            value={formData.summary}
-                            onChange={handleChange}
-                        ></textarea>
-                    </label>
-                    <label htmlFor="language">
-                        <span>Ngôn ngữ</span>
-                        <input
-                            type="text"
-                            id="language"
-                            name="language"
-                            value={formData.language}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label htmlFor="cover">
-                        <span>Ảnh bìa</span>
-                        <input
-                            type="file"
-                            id="cover"
-                            name="cover"
-                            onChange={handleImageChange}
-                        />
-                    </label>
-                    {isLoading && <p>Đang tải ảnh...</p>}
-                    {preview && <img src={preview} alt="Preview" className="image-preview-book" />}
-                    <input type="submit" value="Tạo sách" />
-                </form>
-            </div>
+      <div className="product-container">
+        <div className="product-body">
+          <h1>Thêm Sách</h1>
+          <form className="product-create" onSubmit={handleSubmit}>
+            {/* Tiêu đề, tác giả */}
+            <label><span>Tiêu đề</span>
+              <input name="title" value={formData.title} onChange={handleChange} required />
+            </label>
+            <label><span>Tác giả</span>
+              <input name="author" value={formData.author} onChange={handleChange} required />
+            </label>
+  
+            {/* Chủ đề */}
+            <label><span>Chủ đề</span>
+              <select name="topic" value={formData.topic} onChange={handleTopicChange}>
+                <option value="">Chọn chủ đề</option>
+                {topics.map(t => (
+                  <option key={t._id} value={t._id}>{t.topic}</option>
+                ))}
+                <option value="new">Tạo chủ đề mới</option>
+              </select>
+            </label>
+            {isNewTopic && (
+              <label><span>Chủ đề mới</span>
+                <input value={newTopic} onChange={e => setNewTopic(e.target.value)} required />
+              </label>
+            )}
+  
+            {/* Phân loại phụ, thẻ, NXB, năm XB,... */}
+            <label><span>Phân loại phụ</span>
+              <input name="subcategory" value={formData.subcategory} onChange={handleChange} />
+            </label>
+            <label><span>Thẻ</span>
+              <input name="tag" value={formData.tag} onChange={handleChange} />
+            </label>
+            <label><span>Nhà xuất bản</span>
+              <input name="publisher" value={formData.publisher} onChange={handleChange} />
+            </label>
+            <label><span>Năm XB</span>
+              <input type="number" name="publication_year"
+                value={formData.publication_year}
+                onChange={handleChange} min="0" />
+            </label>
+            <label><span>Edition</span>
+              <input name="edition" value={formData.edition} onChange={handleChange} />
+            </label>
+            <label><span>Tóm tắt</span>
+              <textarea name="summary" value={formData.summary} onChange={handleChange} />
+            </label>
+            <label><span>Ngôn ngữ</span>
+              <input name="language" value={formData.language} onChange={handleChange} />
+            </label>
+  
+            {/* ==== Vị trí: khu vực, kệ, tầng ==== */}
+            <label><span>Khu vực</span>
+              <select
+                name="area"
+                value={formData.area}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Chọn khu vực</option>
+                {areas.map((area, idx) => (
+                  <option key={idx} value={area}>{area}</option>
+                ))}
+              </select>
+            </label>
+  
+            <label><span>Kệ</span>
+              <select
+                name="shelf"
+                value={formData.shelf}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Chọn kệ</option>
+                {["A","B","C","D"].map(s => (
+                  <option key={s} value={s}>Kệ {s}</option>
+                ))}
+              </select>
+            </label>
+  
+            <label><span>Tầng</span>
+              <select
+                name="slot"
+                value={formData.slot}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Chọn tầng</option>
+                {[1,2,3,4].map(n => (
+                  <option key={n} value={n}>Tầng {n}</option>
+                ))}
+              </select>
+            </label>
+            {/* ==== End Vị trí ==== */}
+  
+            {/* ==== Giá ==== */}
+            <label><span>Giá</span>
+              <input
+                type="number"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+                min="0"
+                required
+              />
+            </label>
+  
+            {/* Ảnh bìa */}
+            <label><span>Ảnh bìa</span>
+              <input type="file" name="cover" onChange={handleImageChange} />
+            </label>
+            {isLoading && <p>Đang tải ảnh...</p>}
+            {preview && <img src={preview} alt="Preview" className="image-preview-book" />}
+  
+            <input type="submit" value="Tạo sách" />
+          </form>
         </div>
+      </div>
     );
-}
+  }
+  

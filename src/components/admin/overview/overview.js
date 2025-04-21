@@ -205,6 +205,17 @@ const Overview = () => {
                   legend: { position: 'top' },
                   title: { display: true, text: 'Số lượt mượn sách mỗi tháng' },
                 },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    ticks: {
+                      stepSize: 1, // ✅ Khoảng cách 1 đơn vị
+                      callback: function (value) {
+                        return Number.isInteger(value) ? value : null; // ✅ Chỉ hiển thị số nguyên
+                      },
+                    },
+                  },
+                },
               }}
             />
           </div>

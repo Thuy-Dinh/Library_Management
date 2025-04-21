@@ -109,8 +109,8 @@ export default function LoanEdit() {
                         value={formData.Method}
                         onChange={handleChange}
                     >
-                        <option value="Tại chỗ">Tại chỗ</option>
-                        <option value="Về nhà">Về nhà</option>
+                        <option value="Mượn tại chỗ">Mượn tại chỗ</option>
+                        <option value="Mượn về nhà">Mượn về nhà</option>
                     </select>
                 </label>
 

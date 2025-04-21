@@ -61,29 +61,22 @@ async function GetAllBookApi() {
     }
 }
 
-async function CreateBookApi(title, author, topic, subcategory, tag, publisher, publication_year, edition, summary, language, cover) {
+async function CreateBookApi(bookData) {
     try {
-        console.log(title, author, topic, subcategory, tag, publisher, publication_year, edition, summary, language, cover);
-        const response = await axios.post('http://localhost:3050/book/create-book', {
-            title, 
-            author, 
-            topic, 
-            subcategory, 
-            tag, 
-            publisher, 
-            publication_year, 
-            edition, 
-            summary, 
-            language, 
-            cover
-        });
-
-        return response.data; // Trả về dữ liệu phản hồi từ API
+      console.log("payload gửi đi:", bookData);
+      const response = await axios.post(
+        'http://localhost:3050/book/create-book',
+        bookData
+      );
+      return response.data;
     } catch (error) {
-        console.error('Error during creating book:', error.response ? error.response.data : error.message);
-        throw error;
+      console.error(
+        'Error during creating book:',
+        error.response ? error.response.data : error.message
+      );
+      throw error;
     }
-}
+}  
 
 async function UpdateBookApi(id, formData) {
     try {
@@ -194,6 +187,18 @@ async function SearchByOtherField(params) {
     }
 }  
 
+async function GetAllAreaApi() {
+    try {
+        const response = await axios.get('http://localhost:3050/book/areas');
+
+        return response.data;
+    } catch (error) {
+        // Xử lý lỗi
+        console.error('Error during login:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+}
+
 export { 
     FavoriteApi, 
     LastestBookApi, 
@@ -209,5 +214,6 @@ export {
     SearchByCategoryApi,
     searchSuggestionApi,
     SearchResultApi,
-    SearchByOtherField
+    SearchByOtherField,
+    GetAllAreaApi
 };  

@@ -86,6 +86,7 @@ function ProductDetail() {
                             <FontAwesomeIcon icon={faStar} className='icon-star'/>
                         </div>
                         <div>Tóm tắt: {bookDetail.Summary}</div>
+                        <div>Vị trí: Khu {bookDetail.Location?.area}, kệ {bookDetail.Location?.shelf}, tầng {bookDetail.Location?.slot}</div>
                         <div className={statusClass}>
                           Trạng thái: {statusLabel}
                         </div>

@@ -177,7 +177,7 @@
 .search-fields .field {
     display: flex;
     flex-direction: column;
-    flex: 1 1 180px;
+    flex: 1 1 250px;
 }
 
 .search-fields .field label {
