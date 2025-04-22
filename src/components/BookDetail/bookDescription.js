@@ -20,6 +20,7 @@ function BookDescription({ isAuthenticated }) {
         const fetchBookDetail = async () => {
             try {
                 const response = await BookDetailApi(bookId); 
+                console.log(response.bookDetail)
                 if (response) {
                     setBookDetail(response.bookDetail);  
                 } else {
@@ -69,6 +70,9 @@ function BookDescription({ isAuthenticated }) {
                         <div className='detail-item'>
                             <div style={{ fontWeight: "bold", fontSize: 28 }}>{book.Title}</div>
                             <div>Tác giả: {book.Author}</div>
+                            <div>Khu: {book.Location.area}</div>
+                            <div>Thể loại con: {book.Subcategory}</div>
+                            <div>Thẻ: {book.Tag}</div>
                             <div>Nhà xuất bản: {book.Publisher}</div>
                             <div>Năm xuất bản: {book.Publication_year}</div>
                             <div>Tái bản lần thứ {book.Edition === "First" ? "nhất" : "hai"}</div>

@@ -110,7 +110,7 @@ export default function SearchByCategory() {
   };
 
   return (
-    <div className="homepage-body">
+    <div className="homepage-body-2">
       <Navbar
         isAuthenticated={isAuthenticated}
         userName={userName}

@@ -36,7 +36,7 @@ const steps = [
       '📦 *Mượn về nhà* (tối đa 5 quyển/1 lần):',
       '     + Chọn sách và gửi yêu cầu mượn trên hệ thống.',
       '     + Đợi email xác nhận hoặc từ chối.',
-      '     + Nếu được duyệt, đến thư viện lấy sách và đóng cọc.',
+      '     + Nếu được duyệt, đến thư viện lấy sách và đóng cọc 50% giá trị sách.',
       '     + Nếu bị từ chối, có thể liên hệ thư viện để biết nguyên nhân.',
     ],
   },

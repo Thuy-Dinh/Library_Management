@@ -90,7 +90,7 @@ function AllLoan() {
                     <button onClick={() => handleStatusFilter('Đang mượn')} className="filter-btn">Đang mượn</button>
                     <button onClick={() => handleStatusFilter('Đã trả')} className="filter-btn">Đã trả</button>
                     <button onClick={() => handleStatusFilter('Quá hạn')} className="filter-btn">Quá hạn</button>
-                    <button onClick={() => handleStatusFilter('Bị từ chối')} className="filter-btn">Bị từ chối</button>
+                    <button onClick={() => handleStatusFilter('Đã từ chối')} className="filter-btn">Bị từ chối</button>
                 </div>
 
                 <div className="loan-detail">
@@ -117,7 +117,7 @@ function AllLoan() {
                                                 {item.State === 'Đang mượn' && '📚 '}
                                                 {item.State === 'Đã trả' && '✅ '}
                                                 {item.State === 'Quá hạn' && '⏰ '}
-                                                {item.State === 'Bị từ chối' && '❌ '}
+                                                {item.State === 'Đã từ chối' && '❌ '}
                                                 {item.State}
                                             </span>
                                         </div>

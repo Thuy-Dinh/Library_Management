@@ -23,7 +23,9 @@ export default function LoanManagement() {
 
     const [searchCode, setSearchCode] = useState("");
     const [searchName, setSearchName] = useState("");
-    const [searchBook, setSearchBook] = useState("");
+    // const [searchBook, setSearchBook] = useState("");
+    const [filterMonth, setFilterMonth] = useState("");
+    const [filterYear, setFilterYear] = useState("");
     const [searchState, setSearchState] = useState("");
 
     const isDueSoon = (item) => {
@@ -114,13 +116,20 @@ export default function LoanManagement() {
     const filteredData = data?.filter((item) => {
         const loanCode = item.LoanCode?.toLowerCase() ?? "";
         const userName = users[item.AccountID]?.Name?.toLowerCase() ?? "";
-        const title = books[item.BookID]?.Title?.toLowerCase() ?? "";
+        // const title = books[item.BookID]?.Title?.toLowerCase() ?? "";
         const state = item.State.toLowerCase() ?? "";
-        
+
+        const loanDate = dayjs(item.DayStart); // ngày mượn
+
+        const matchMonth = filterMonth ? loanDate.month() + 1 === parseInt(filterMonth) : true;
+        const matchYear = filterYear ? loanDate.year() === parseInt(filterYear) : true;
+            
         return (
             loanCode.includes(searchCode.toLowerCase()) &&
             userName.includes(searchName.toLowerCase()) &&
-            title.includes(searchBook.toLowerCase()) &&
+            // title.includes(searchBook.toLowerCase()) &&
+            matchMonth &&
+            matchYear &&
             state.includes(searchState.toLowerCase())
         );
     }) || [];    
@@ -171,7 +180,7 @@ export default function LoanManagement() {
                                 onChange={(e) => setSearchName(e.target.value)}
                             />
                         </label>
-                        <label>
+                        {/* <label>
                             <h4>Tên sách</h4>
                             <input
                                 type="text"
@@ -179,6 +188,26 @@ export default function LoanManagement() {
                                 value={searchBook}
                                 onChange={(e) => setSearchBook(e.target.value)}
                             />
+                        </label> */}
+                        <label>
+                            <h4>Tháng</h4>
+                            <select value={filterMonth} onChange={(e) => setFilterMonth(e.target.value)}>
+                                <option value="">-- Tất cả --</option>
+                                {[...Array(12)].map((_, i) => (
+                                    <option key={i + 1} value={i + 1}>{`Tháng ${i + 1}`}</option>
+                                ))}
+                            </select>
+                        </label>
+
+                        <label>
+                            <h4>Năm</h4>
+                            <select value={filterYear} onChange={(e) => setFilterYear(e.target.value)}>
+                                <option value="">-- Tất cả --</option>
+                                {/* Bạn có thể tạo danh sách năm theo thực tế dữ liệu */}
+                                {[2022, 2023, 2024, 2025].map((year) => (
+                                    <option key={year} value={year}>{year}</option>
+                                ))}
+                            </select>
                         </label>
                         <label>
                             <h4>Trạng thái</h4>

@@ -13,7 +13,7 @@ function SearchResult() {
     const [userName, setUserName] = useState("");
     const [results, setResults] = useState([]);
     const [proposedBooks, setProposedBooks] = useState({});
-    const [filters, setFilters] = useState({ language: "", year: "" });
+    const [filters, setFilters] = useState({ language: "", yearRange: "" });
 
     const [sortType, setSortType] = useState("rating");
     const [sortOrder, setSortOrder] = useState("desc");
@@ -74,7 +74,12 @@ function SearchResult() {
     const filteredAndSortedResults = results
         .filter(book =>
             (!filters.language || book.Language?.toLowerCase().includes(filters.language.toLowerCase())) &&
-            (!filters.year || String(book.Publication_year).includes(filters.year))
+            (!filters.yearRange || (
+                (filters.yearRange === "before1000" && book.Publication_year < 1000) ||
+                (filters.yearRange === "1000to1500" && book.Publication_year >= 1000 && book.Publication_year <= 1500) ||
+                (filters.yearRange === "1500to2000" && book.Publication_year > 1500 && book.Publication_year <= 2000) ||
+                (filters.yearRange === "after2000" && book.Publication_year > 2000)
+            ))
         )
         .sort((a, b) => {
             let diff = 0;
@@ -86,12 +91,10 @@ function SearchResult() {
             return sortOrder === "asc" ? diff : -diff;
         });
 
-    // Reset về trang 1 mỗi khi lọc/sắp xếp thay đổi
     useEffect(() => {
         setCurrentPage(1);
     }, [filters, sortType, sortOrder]);
 
-    // Phân trang
     const indexOfLastResult = currentPage * resultsPerPage;
     const indexOfFirstResult = indexOfLastResult - resultsPerPage;
     const currentResults = filteredAndSortedResults.slice(indexOfFirstResult, indexOfLastResult);
@@ -109,7 +112,6 @@ function SearchResult() {
             <h2 style={{ textAlign: "center", marginTop: 30 }}>Kết quả tìm kiếm: {keyword}</h2>
             
             <div className='search-result'>
-                {/* Sidebar trái */}
                 <div className='filter-section'>
                     <h3>Tùy chọn:</h3>
 
@@ -125,12 +127,16 @@ function SearchResult() {
 
                     <label>
                         Năm xuất bản:
-                        <input 
-                            type="text" 
-                            value={filters.year}
-                            onChange={(e) => setFilters({ ...filters, year: e.target.value })}
-                            placeholder="VD: 2023"
-                        />
+                        <select
+                            value={filters.yearRange}
+                            onChange={(e) => setFilters({ ...filters, yearRange: e.target.value })}
+                        >
+                            <option value="">Tất cả</option>
+                            <option value="before1000">Trước 1000</option>
+                            <option value="1000to1500">1000 - 1500</option>
+                            <option value="1500to2000">1500 - 2000</option>
+                            <option value="after2000">Sau 2000</option>
+                        </select>
                     </label>
 
                     <label>
@@ -156,7 +162,6 @@ function SearchResult() {
                     </label>
                 </div>
 
-                {/* Kết quả tìm kiếm bên phải */}
                 <div className="result-content">
                     {currentResults.length > 0 ? (
                         currentResults.map((bookDetail) => (
@@ -213,7 +218,6 @@ function SearchResult() {
                         <p>Không tìm thấy kết quả phù hợp.</p>
                     )}
 
-                    {/* PHÂN TRANG */}
                     {totalPages > 1 && (
                         <div className="pagination">
                             {Array.from({ length: totalPages }, (_, index) => (

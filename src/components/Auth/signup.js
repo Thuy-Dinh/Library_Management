@@ -10,6 +10,7 @@ export default function Signup({ setIsAuthenticated }) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [cccd, setCccd] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
@@ -29,6 +30,11 @@ export default function Signup({ setIsAuthenticated }) {
     const handleSignup = async () => {
         setErrMessage('');
 
+        if (password !== confirmPassword) {
+            setErrMessage("Mật khẩu nhập lại không khớp.");
+            return;
+        }
+
         try {
             const data = await SignupApi(username, email, password, cccd, phone, address, age, gender);
             if (data && data.errCode !== 0) {
@@ -38,7 +44,7 @@ export default function Signup({ setIsAuthenticated }) {
                 localStorage.setItem("token", data.token);
                 setTimeout(() => {
                     navigate('/login');
-                }, 5000);
+                }, 3000);
             }
         } catch (error) {
             if (error.response && error.response.data) {
@@ -61,41 +67,61 @@ export default function Signup({ setIsAuthenticated }) {
                 <div className='signup-content'>
                     <div className='text-title'>Tạo một tài khoản mới</div>
 
-                    <div className='form-group signup-input'>
-                        <label>Họ Tên</label>
-                        <input
-                            type='text'
-                            className='form-control'
-                            placeholder='Nhập tên người dùng'
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
+                    <div className='form-group signup-input-row'>
+                        <div className='signup-input'>
+                            <label>Họ Tên</label>
+                            <input
+                                type='text'
+                                className='form-control'
+                                placeholder='Nhập tên người dùng'
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                        </div>
+
+                        <div className='signup-input'>
+                            <label>Email</label>
+                            <input
+                                type='email'
+                                className='form-control'
+                                placeholder='Nhập email'
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
                     </div>
 
-                    <div className='form-group signup-input'>
-                        <label>Email</label>
-                        <input
-                            type='email'
-                            className='form-control'
-                            placeholder='Nhập email'
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
+                    <div className='form-group signup-input-row'>
+                        <div className='signup-input'>
+                            <label>Mật khẩu</label>
+                            <div className='custom-password'>
+                                <input
+                                    type={isShowPassword ? 'text' : 'password'}
+                                    className='form-control'
+                                    placeholder='Nhập mật khẩu'
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                                <span onClick={handleShowHidePassword}>
+                                    <FontAwesomeIcon icon={isShowPassword ? faEye : faEyeSlash} />
+                                </span>
+                            </div>
+                        </div>
 
-                    <div className='form-group signup-input'>
-                        <label>Mật khẩu</label>
+                        <div className='signup-input'>
+                        <label>Nhập lại mật khẩu</label>
                         <div className='custom-password'>
                             <input
                                 type={isShowPassword ? 'text' : 'password'}
                                 className='form-control'
-                                placeholder='Nhập mật khẩu'
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder='Nhập lại mật khẩu'
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
                             />
                             <span onClick={handleShowHidePassword}>
                                 <FontAwesomeIcon icon={isShowPassword ? faEye : faEyeSlash} />
                             </span>
+                        </div>
                         </div>
                     </div>
 
@@ -159,7 +185,6 @@ export default function Signup({ setIsAuthenticated }) {
                                 <option value="Không xác định">Không xác định</option>
                             </select>
                         </div>
-
                     </div>
 
                     <div style={{ color: 'red', paddingBottom: 15 }}>
@@ -169,17 +194,6 @@ export default function Signup({ setIsAuthenticated }) {
                     <div className='text-center'>
                         <button className='text-signup' onClick={handleSignup}>Đăng ký</button>
                     </div>
-
-                    {/* <div className='text-center other-signup'>
-                        <div className='line'></div>
-                        <div>Hoặc đăng ký bằng</div>
-                        <div className='line'></div>
-                    </div>
-
-                    <div className='social-signup'>
-                        <FontAwesomeIcon icon={faGoogle} className="social-icon" />
-                        <FontAwesomeIcon icon={faFacebook} className="social-icon" />
-                    </div> */}
                 </div>
             </div>
 

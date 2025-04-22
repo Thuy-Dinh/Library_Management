@@ -253,11 +253,13 @@ export default function ProductManagement() {
           <tbody>
             {currentRecords.map(item => (
               <tr key={item.BookID}>
-                <td>{item.BookCode}</td>
-                <td
+                <td 
                   style={{ cursor: 'pointer' }} 
                   onClick={() => handleDetail(item._id)}
                 >
+                  {item.BookCode}
+                </td>
+                <td>
                   {item.Title}
                 </td>
                 <td>{item.Author}</td>
