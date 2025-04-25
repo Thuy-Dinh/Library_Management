@@ -28,13 +28,41 @@ export default function Signup({ setIsAuthenticated }) {
     }, [navigate]);
 
     const handleSignup = async () => {
-        setErrMessage('');
-
+        const errors = [];
+    
+        if (!username.trim()) {
+            errors.push("Họ tên không được để trống.");
+        }
+    
+        if (!age) {
+            errors.push("Ngày sinh không được để trống.");
+        }
+    
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            errors.push("Email không đúng định dạng.");
+        }
+    
+        if (!/^\d{12}$/.test(cccd)) {
+            errors.push("CCCD phải bao gồm đúng 12 chữ số.");
+        }
+    
+        if (!/^\d{10}$/.test(phone)) {
+            errors.push("Số điện thoại phải bao gồm đúng 10 chữ số.");
+        }
+    
         if (password !== confirmPassword) {
-            setErrMessage("Mật khẩu nhập lại không khớp.");
+            errors.push("Mật khẩu nhập lại không khớp.");
+        }
+    
+        // Bạn có thể thêm kiểm tra mật khẩu mạnh hơn nếu cần:
+        // if (password.length < 6) { errors.push("Mật khẩu phải ít nhất 6 ký tự."); }
+    
+        if (errors.length > 0) {
+            setErrMessage(errors.join('\n')); // hoặc bạn có thể dùng <ul> để format đẹp hơn
             return;
         }
-
+    
         try {
             const data = await SignupApi(username, email, password, cccd, phone, address, age, gender);
             if (data && data.errCode !== 0) {
@@ -51,7 +79,7 @@ export default function Signup({ setIsAuthenticated }) {
                 setErrMessage(error.response.data.message);
             }
         }
-    };
+    };    
 
     const handleShowHidePassword = () => {
         setIsShowPassword(!isShowPassword);
@@ -162,11 +190,11 @@ export default function Signup({ setIsAuthenticated }) {
 
                     <div className='form-group signup-input-row'>
                         <div className='signup-input'>
-                            <label>Tuổi</label>
+                            <label>Ngày sinh</label>
                             <input
-                                type='number'
+                                type='date'
                                 className='form-control'
-                                placeholder='Nhập tuổi'
+                                placeholder='Nhập ngày - tháng - năm sinh'
                                 value={age}
                                 onChange={(e) => setAge(e.target.value)}
                             />
@@ -187,7 +215,7 @@ export default function Signup({ setIsAuthenticated }) {
                         </div>
                     </div>
 
-                    <div style={{ color: 'red', paddingBottom: 15 }}>
+                    <div style={{ color: 'red', paddingBottom: 15, whiteSpace: 'pre-line' }}>
                         {errMessage}
                     </div>
 

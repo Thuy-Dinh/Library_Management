@@ -36,6 +36,15 @@ function LibraryCard() {
         fetchUser();
     }, [storedEmail]);    
 
+    const formatDate = (isoDate) => {
+        if (!isoDate) return '';
+        const date = new Date(isoDate);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // tháng tính từ 0
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };    
+
     if (error) {
         return <div className="error-message">Lỗi: {error}</div>;
     }
@@ -56,7 +65,7 @@ function LibraryCard() {
                     <div><strong>Số CCCD:</strong> {data.CCCDNumber}</div>
                     <div><strong>Số điện thoại:</strong> {data.Phone}</div>
                     <div><strong>Địa chỉ:</strong> {data.Address}</div>
-                    <div><strong>Tuổi:</strong> {data.Age}</div>
+                    <div><strong>Ngày sinh:</strong> {formatDate(data.Age)}</div>
                     <div><strong>Giới tính:</strong> {data.Gender}</div>
                 </div>
                 <div className="edit-button-container">

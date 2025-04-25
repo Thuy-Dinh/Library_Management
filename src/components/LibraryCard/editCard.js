@@ -36,7 +36,21 @@ function EditProfile() {
         const fetchUser = async () => {
             try {
                 const res = await GetAUserApi(storedCode);
-                setUserData(res.user);
+                const formatDate = (isoDate) => {
+                    if (!isoDate) return '';
+                    const date = new Date(isoDate);
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                };
+                
+                const formattedUser = {
+                    ...res.user,
+                    Age: formatDate(res.user.Age)
+                };
+                
+                setUserData(formattedUser);                
             } catch (err) {
                 setError('Không thể lấy thông tin người dùng');
             }
@@ -89,8 +103,8 @@ function EditProfile() {
                             <label>Địa chỉ:
                                 <input type="text" name="Address" value={userData.Address} onChange={handleChange} />
                             </label>
-                            <label>Tuổi:
-                                <input type="number" name="Age" value={userData.Age} onChange={handleChange} />
+                            <label>Ngày sinh:
+                                <input type="date" name="Age" value={userData.Age} onChange={handleChange} />
                             </label>
                             <label>Giới tính:
                                 <select name="Gender" value={userData.Gender} onChange={handleChange}>

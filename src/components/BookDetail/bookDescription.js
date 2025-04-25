@@ -69,19 +69,24 @@ function BookDescription({ isAuthenticated }) {
                         <img src={book.Cover} alt="Book Cover"/>
                         <div className='detail-item'>
                             <div style={{ fontWeight: "bold", fontSize: 28 }}>{book.Title}</div>
-                            <div>Tác giả: {book.Author}</div>
-                            <div>Khu: {book.Location.area}</div>
-                            <div>Thể loại con: {book.Subcategory}</div>
-                            <div>Thẻ: {book.Tag}</div>
-                            <div>Nhà xuất bản: {book.Publisher}</div>
-                            <div>Năm xuất bản: {book.Publication_year}</div>
-                            <div>Tái bản lần thứ {book.Edition === "First" ? "nhất" : "hai"}</div>
-                            <div>Ngôn ngữ: {book.Language}</div>
-                            <div>
-                                {book.Rating}
-                                <FontAwesomeIcon icon={faStar} className='icon-star'/>
+                            <div className='book-info-grid'>
+                                <div>Tác giả: {book.Author}</div>
+                                <div>Khu: {book.Location.area}</div>
+                                <div>Thể loại con: {book.Subcategory}</div>
+                                <div>Thẻ: {book.Tag}</div>
+                                <div>Nhà xuất bản: {book.Publisher}</div>
+                                <div>Năm xuất bản: {book.Publication_year}</div>
+                                <div>Tái bản lần thứ: {book.Edition === "First" ? "nhất" : "hai"}</div>
+                                <div>Ngôn ngữ: {book.Language}</div>
+                                <div>
+                                    Đánh giá: {book.Rating}
+                                    <FontAwesomeIcon icon={faStar} className='icon-star'/>
+                                </div>
+                                <div className={`book-status ${book.Availability.toLowerCase() === "available" ? "available" : "unavailable"}`}>
+                                    Trạng thái: {book.Availability.toLowerCase() === "available" ? "Có sẵn" : "Không có sẵn"}
+                                </div>
+                                <div className="summary">Tóm tắt: {book.Summary}</div>
                             </div>
-                            <div>Tóm tắt: {book.Summary}</div>
                             <button className='btn-borrow-detail' onClick={() => handleAvailable(book)}>Mượn</button>
                         </div>
                     </div>

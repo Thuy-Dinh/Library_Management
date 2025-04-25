@@ -8,7 +8,7 @@ import "./userManagement.css";
 export default function UserManagement() {
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const recordsPerPage = 8;
+    const recordsPerPage = 5;
 
     const [searchFields, setSearchFields] = useState({
         lbcode: "",
@@ -39,6 +39,15 @@ export default function UserManagement() {
             console.error("Lỗi khi lấy dữ liệu:", error);
         }
     };
+
+    const formatDate = (isoDate) => {
+        if (!isoDate) return '';
+        const date = new Date(isoDate);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // tháng tính từ 0
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };    
 
     const handleSearchChange = (field, value) => {
         setSearchFields((prev) => ({
@@ -167,7 +176,7 @@ export default function UserManagement() {
                         <th>Email</th>
                         <th>Tên</th>
                         <th>Giới tính</th>
-                        <th>Tuổi</th>
+                        <th>Ngày sinh</th>
                         <th>Số CCCD</th>
                         <th>Số điện thoại</th>
                         <th>Địa chỉ</th>
@@ -182,7 +191,7 @@ export default function UserManagement() {
                             <td>{item.Email}</td>
                             <td>{item.Name}</td>
                             <td>{item.Gender}</td>
-                            <td>{item.Age}</td>
+                            <td>{formatDate(item.Age)}</td>
                             <td>{item.CCCDNumber}</td>
                             <td>{item.Phone}</td>
                             <td>{item.Address}</td>

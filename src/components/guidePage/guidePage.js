@@ -33,7 +33,7 @@ const steps = [
       '     + Thủ thư kiểm tra CCCD và in đơn mượn.',
       '     + Dùng đơn mượn để vào phòng đọc.',
       '',
-      '📦 *Mượn về nhà* (tối đa 5 quyển/1 lần):',
+      '📦 *Mượn về nhà* (tối đa 2 quyển/1 lần):',
       '     + Chọn sách và gửi yêu cầu mượn trên hệ thống.',
       '     + Đợi email xác nhận hoặc từ chối.',
       '     + Nếu được duyệt, đến thư viện lấy sách và đóng cọc 50% giá trị sách.',
